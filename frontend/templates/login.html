@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>I-ODSS — Sign In</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#080c14;--surf:#0f1521;--surf2:#161e2e;--surf3:#1d2840;
+  --bdr:rgba(255,255,255,0.07);--bdr2:rgba(255,255,255,0.12);
+  --txt:#e8edf5;--muted:#6b7a94;--faint:#3d4a5c;
+  --blue:#388bff;--blue-d:#1a6fd4;--blue-glow:rgba(56,139,255,0.18);
+  --red:#ff5b5b;--green:#3ddc97;--amber:#f4b942;
+  --font:'DM Sans',sans-serif;--display:'Syne',sans-serif;
+}
+body{font-family:var(--font);background:var(--bg);color:var(--txt);min-height:100vh;display:flex;overflow:hidden}
+
+/* ── Left panel ── */
+.left{flex:1;display:flex;flex-direction:column;justify-content:center;padding:56px 68px;position:relative;overflow:hidden;min-width:0}
+.glow-orb{position:absolute;border-radius:50%;pointer-events:none}
+.glow-orb.a{width:600px;height:600px;top:-220px;left:-220px;background:radial-gradient(circle,rgba(56,139,255,0.11) 0%,transparent 70%)}
+.glow-orb.b{width:400px;height:400px;bottom:-100px;right:-80px;background:radial-gradient(circle,rgba(61,220,151,0.07) 0%,transparent 70%)}
+.grid-bg{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,0.024) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.024) 1px,transparent 1px);background-size:48px 48px;mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black 0%,transparent 100%);pointer-events:none}
+
+.brand{display:flex;align-items:center;gap:13px;margin-bottom:52px;position:relative}
+.brand-icon{width:42px;height:42px;background:var(--blue);border-radius:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.brand-icon svg{width:21px;height:21px;stroke:#fff;fill:none;stroke-width:2.2}
+.brand-name{font-family:var(--display);font-size:17px;font-weight:700}
+.brand-name span{color:var(--blue)}
+.brand-sub{font-size:10px;color:var(--muted);margin-top:1px}
+
+.eyebrow{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--blue);margin-bottom:18px;display:flex;align-items:center;gap:8px;position:relative}
+.eyebrow::before{content:'';width:22px;height:1.5px;background:var(--blue)}
+
+h1{font-family:var(--display);font-size:42px;font-weight:800;line-height:1.08;letter-spacing:-.02em;margin-bottom:20px;position:relative}
+h1 .accent{color:var(--blue)}
+.sub{font-size:14px;line-height:1.75;color:var(--muted);max-width:400px;margin-bottom:40px;position:relative}
+
+.feats{display:flex;flex-direction:column;gap:11px;position:relative}
+.feat{display:flex;align-items:center;gap:11px;font-size:12px;color:var(--muted)}
+.feat-dot{width:26px;height:26px;border-radius:7px;background:var(--surf2);border:1px solid var(--bdr);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.feat-dot svg{width:13px;height:13px;stroke:var(--blue);fill:none;stroke-width:2}
+
+/* ── Right panel ── */
+.right{width:420px;background:var(--surf);border-left:1px solid var(--bdr);display:flex;flex-direction:column;justify-content:center;padding:48px 42px;flex-shrink:0;overflow-y:auto;max-height:100vh}
+
+/* Tabs */
+.auth-tabs{display:flex;background:var(--surf2);border-radius:9px;padding:3px;margin-bottom:24px;gap:3px}
+.auth-tab{flex:1;padding:8px;font-size:12px;font-weight:600;font-family:var(--display);cursor:pointer;border:none;background:transparent;color:var(--muted);border-radius:7px;transition:all .15s}
+.auth-tab.active{background:var(--blue);color:#fff}
+.auth-panel{display:none}.auth-panel.active{display:block}
+
+.panel-title{font-family:var(--display);font-size:22px;font-weight:700;margin-bottom:6px}
+.panel-sub{font-size:12px;color:var(--muted);margin-bottom:22px;line-height:1.6}
+
+.demo-box{background:var(--surf2);border:1px solid var(--bdr);border-radius:8px;padding:9px 13px;margin-bottom:20px;font-size:11px;color:var(--muted);line-height:1.8}
+.demo-box strong{color:var(--txt);font-weight:500}
+
+.field{margin-bottom:14px}
+.field label{display:block;font-size:10px;font-weight:700;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px}
+.field input{width:100%;background:var(--surf2);border:1px solid var(--bdr);border-radius:8px;padding:10px 13px;font-size:13px;font-family:var(--font);color:var(--txt);outline:none;transition:border-color .16s,box-shadow .16s}
+.field input:focus{border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-glow)}
+.field input::placeholder{color:var(--faint)}
+.field input.err-field{border-color:var(--red)}
+
+/* Password strength */
+.pwd-meter{margin-top:5px}
+.pwd-bar-wrap{height:4px;background:var(--surf3);border-radius:2px;overflow:hidden}
+.pwd-bar{height:100%;border-radius:2px;transition:width .3s,background .3s;width:0%}
+.pwd-label{font-size:10px;margin-top:4px;color:var(--muted)}
+
+.err-msg{background:rgba(255,91,91,0.1);border:1px solid rgba(255,91,91,0.28);border-radius:8px;padding:9px 13px;font-size:12px;color:var(--red);margin-bottom:14px;display:none;line-height:1.5}
+.err-msg.show{display:block}
+.warn-msg{background:rgba(244,185,66,0.1);border:1px solid rgba(244,185,66,0.3);border-radius:8px;padding:9px 13px;font-size:12px;color:var(--amber);margin-bottom:14px;display:none;line-height:1.5}
+.warn-msg.show{display:block}
+
+.btn-submit{width:100%;background:var(--blue);color:#fff;border:none;border-radius:8px;padding:12px;font-size:13px;font-weight:600;font-family:var(--display);cursor:pointer;transition:background .16s,transform .1s;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn-submit:hover{background:var(--blue-d)}.btn-submit:active{transform:scale(.98)}
+.btn-submit:disabled{background:var(--faint);cursor:not-allowed}
+.spin{width:15px;height:15px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;display:none;flex-shrink:0}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.footer-note{margin-top:24px;font-size:10px;color:var(--faint);text-align:center;line-height:1.8}
+
+/* Animations */
+.left > *{animation:slideUp .6s ease both}
+.brand{animation-delay:.04s}.eyebrow{animation-delay:.09s}h1{animation-delay:.14s}.sub{animation-delay:.19s}.feats{animation-delay:.26s}
+@keyframes slideUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.right{animation:fadeIn .5s ease .08s both}
+@keyframes fadeIn{from{opacity:0;transform:translateX(12px)}to{opacity:1;transform:translateX(0)}}
+
+@media(max-width:900px){body{flex-direction:column}.left{display:none}.right{width:100%;border-left:none;padding:40px 28px;max-height:none}}
+</style>
+</head>
+<body>
+
+<!-- LEFT -->
+<div class="left">
+  <div class="grid-bg"></div>
+  <div class="glow-orb a"></div>
+  <div class="glow-orb b"></div>
+  <div class="brand">
+    <div class="brand-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M14 17h7M17 14v7"/></svg></div>
+    <div><div class="brand-name"><span>I</span>-ODSS</div><div class="brand-sub">Intelligent Decision Support System</div></div>
+  </div>
+  <div class="eyebrow">FYP Research Prototype — CDCS230</div>
+  <h1>From data<br>to <span class="accent">decisions</span>,<br>automatically.</h1>
+  <p class="sub">Upload any e-commerce CSV — Shopee, Lazada, TikTok Shop, or custom format — and I-ODSS turns it into prescriptive action cards for inventory, pricing, and bundling.</p>
+  <div class="feats">
+    <div class="feat"><div class="feat-dot"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>SARIMA (1,1,1)(1,1,0)[7] demand forecasting</div>
+    <div class="feat"><div class="feat-dot"><svg viewBox="0 0 24 24"><path d="M20 7H4a2 2 0 00-2 2v6a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2z"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg></div>ROP = (d × L) + Safety Stock — live reorder alerts</div>
+    <div class="feat"><div class="feat-dot"><svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div>PED arc-elasticity with XAI explanations</div>
+    <div class="feat"><div class="feat-dot"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 3l-4 4-4-4"/></svg></div>FP-Growth Lift ≥ 1.2 market basket analysis</div>
+    <div class="feat"><div class="feat-dot"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>RAM-only processing — no data written to disk</div>
+  </div>
+</div>
+
+<!-- RIGHT -->
+<div class="right">
+  <div class="auth-tabs">
+    <button class="auth-tab active" onclick="switchTab('login',this)">Sign In</button>
+    <button class="auth-tab" onclick="switchTab('register',this)">Register</button>
+  </div>
+
+  <!-- LOGIN PANEL -->
+  <div class="auth-panel active" id="panel-login">
+    <div class="panel-title">Welcome back</div>
+    <div class="panel-sub">Sign in to access your seller dashboard.</div>
+    <div class="demo-box"><strong>Demo credentials</strong><br>seller@iodss.com / demo1234<br>admin@iodss.com / admin123</div>
+    <div class="err-msg" id="loginErr"></div>
+    <div class="field"><label for="lEmail">Email</label><input type="email" id="lEmail" placeholder="seller@iodss.com" autocomplete="email"/></div>
+    <div class="field"><label for="lPwd">Password</label><input type="password" id="lPwd" placeholder="••••••••" autocomplete="current-password"/></div>
+    <button class="btn-submit" id="loginBtn" onclick="doLogin()">
+      <span id="loginTxt">Sign in to dashboard</span>
+      <div class="spin" id="loginSpin"></div>
+    </button>
+  </div>
+
+  <!-- REGISTER PANEL -->
+  <div class="auth-panel" id="panel-register">
+    <div class="panel-title">Create account</div>
+    <div class="panel-sub">Register to save your session and settings.</div>
+    <div class="err-msg" id="regErr"></div>
+    <div class="warn-msg" id="regWarn"></div>
+    <div class="field"><label for="rName">Display name</label><input type="text" id="rName" placeholder="Your name" autocomplete="name"/></div>
+    <div class="field"><label for="rEmail">Email</label><input type="email" id="rEmail" placeholder="you@example.com" autocomplete="email"/></div>
+    <div class="field">
+      <label for="rPwd">Password</label>
+      <input type="password" id="rPwd" placeholder="Min 6 characters" autocomplete="new-password" oninput="checkStrength(this.value)"/>
+      <div class="pwd-meter" id="pwdMeter" style="display:none">
+        <div class="pwd-bar-wrap"><div class="pwd-bar" id="pwdBar"></div></div>
+        <div class="pwd-label" id="pwdLabel"></div>
+      </div>
+    </div>
+    <button class="btn-submit" id="regBtn" onclick="doRegister()">
+      <span id="regTxt">Create account</span>
+      <div class="spin" id="regSpin"></div>
+    </button>
+  </div>
+
+  <div class="footer-note">I-ODSS v6 · CDCS230 Research Prototype · 2025<br>All transaction data processed in RAM only — never stored on disk.</div>
+</div>
+
+<script>
+/* ── Tab switching ── */
+function switchTab(tab, btn) {
+  document.querySelectorAll('.auth-tab').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.auth-panel').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('panel-' + tab).classList.add('active');
+}
+
+/* ── Password strength meter ── */
+function checkStrength(pwd) {
+  const meter = document.getElementById('pwdMeter');
+  const bar   = document.getElementById('pwdBar');
+  const lbl   = document.getElementById('pwdLabel');
+  if (!pwd) { meter.style.display = 'none'; return; }
+  meter.style.display = 'block';
+  let score = 0;
+  if (pwd.length >= 6)  score++;
+  if (pwd.length >= 10) score++;
+  if (/[A-Z]/.test(pwd)) score++;
+  if (/[0-9]/.test(pwd)) score++;
+  if (/[^A-Za-z0-9]/.test(pwd)) score++;
+  const levels = [
+    { w: 18, bg: '#ff5b5b', t: 'Weak' },
+    { w: 38, bg: '#f4b942', t: 'Fair' },
+    { w: 60, bg: '#f4b942', t: 'Good' },
+    { w: 82, bg: '#3ddc97', t: 'Strong' },
+    { w: 100,bg: '#3ddc97', t: 'Very strong' },
+  ];
+  const lv = levels[Math.min(score, 4)];
+  bar.style.width = lv.w + '%';
+  bar.style.background = lv.bg;
+  lbl.textContent = lv.t;
+  lbl.style.color = lv.bg;
+}
+
+/* ── Login ── */
+async function doLogin() {
+  const email = document.getElementById('lEmail').value.trim();
+  const pwd   = document.getElementById('lPwd').value;
+  const errEl = document.getElementById('loginErr');
+  errEl.classList.remove('show');
+
+  if (!email) { errEl.textContent = 'Please enter your email address.'; errEl.classList.add('show'); return; }
+  if (!pwd)   { errEl.textContent = 'Please enter your password.'; errEl.classList.add('show'); return; }
+
+  setBusy('login', true);
+  try {
+    const r = await fetch('/api/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password: pwd }),
+    });
+    if (r.ok) {
+      const d = await r.json();
+      localStorage.setItem('iodss_user', JSON.stringify(d.user));
+      window.location.href = '/dashboard';
+    } else {
+      const d = await r.json().catch(() => ({}));
+      errEl.textContent = d.detail || 'Invalid email or password.';
+      errEl.classList.add('show');
+    }
+  } catch (e) {
+    errEl.textContent = 'Cannot reach server — is the backend running?';
+    errEl.classList.add('show');
+  }
+  setBusy('login', false);
+}
+
+/* ── Register (prototype: just validate and redirect with a note) ── */
+async function doRegister() {
+  const name  = document.getElementById('rName').value.trim();
+  const email = document.getElementById('rEmail').value.trim();
+  const pwd   = document.getElementById('rPwd').value;
+  const errEl = document.getElementById('regErr');
+  const warnEl= document.getElementById('regWarn');
+  errEl.classList.remove('show'); warnEl.classList.remove('show');
+
+  if (!name)          { errEl.textContent = 'Please enter your name.'; errEl.classList.add('show'); return; }
+  if (!email)         { errEl.textContent = 'Please enter your email.'; errEl.classList.add('show'); return; }
+  if (pwd.length < 6) { errEl.textContent = 'Password must be at least 6 characters.'; errEl.classList.add('show'); return; }
+  if (!email.includes('@')) { errEl.textContent = 'Please enter a valid email address.'; errEl.classList.add('show'); return; }
+
+  setBusy('reg', true);
+  /* Prototype: registration stores locally — real system would POST to /api/register */
+  await new Promise(r => setTimeout(r, 600));
+  const fakeUser = { email, name };
+  localStorage.setItem('iodss_user', JSON.stringify(fakeUser));
+  warnEl.textContent = 'Account created (prototype — session only). Redirecting…';
+  warnEl.classList.add('show');
+  setTimeout(() => { window.location.href = '/dashboard'; }, 900);
+  setBusy('reg', false);
+}
+
+function setBusy(form, busy) {
+  const pre = form === 'login' ? 'login' : 'reg';
+  document.getElementById(pre + 'Btn').disabled = busy;
+  document.getElementById(pre + 'Txt').style.display = busy ? 'none' : '';
+  document.getElementById(pre + 'Spin').style.display = busy ? 'block' : 'none';
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+</script>
+</body>
+</html>

@@ -1,0 +1,1365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>I-ODSS — Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@400;500&family=DM+Mono:wght@500&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f2f5fb;--surf:#ffffff;--surf2:#f0f3fa;--surf3:#e6eaf5;
+  --bdr:rgba(0,0,0,0.07);--bdr2:rgba(0,0,0,0.13);
+  --txt:#0b0f1a;--muted:#5c6680;--faint:#9aa3b8;
+  --blue:#2563eb;--bl:#eff6ff;--bm:#bfdbfe;
+  --green:#15803d;--gl:#f0fdf4;--gm:#bbf7d0;
+  --amber:#b45309;--al:#fffbeb;--am:#fde68a;
+  --red:#b91c1c;--rl:#fef2f2;--rm:#fecaca;
+  --teal:#0f766e;--tl:#f0fdfa;
+  --purple:#6d28d9;--pl:#f5f3ff;
+  --font:'DM Sans',sans-serif;--display:'Syne',sans-serif;--mono:'DM Mono',monospace;
+  --sh1:0 1px 3px rgba(0,0,0,0.05);--sh2:0 4px 14px rgba(0,0,0,0.08);--sh3:0 20px 48px rgba(0,0,0,0.14);
+  --sw:230px;--th:54px;
+}
+html,body{height:100%;font-family:var(--font);background:var(--bg);color:var(--txt);font-size:14px;line-height:1.5}
+
+/* ══ LAYOUT ══ */
+.layout{display:flex;height:100vh;overflow:hidden}
+.sidebar{width:var(--sw);height:100vh;background:var(--surf);border-right:1px solid var(--bdr);display:flex;flex-direction:column;flex-shrink:0;transition:width .22s ease;overflow:hidden}
+.sidebar.collapsed{width:0;border-right:none}
+.sb-inner{width:var(--sw);display:flex;flex-direction:column;height:100%}
+.sb-logo{padding:15px 15px 12px;border-bottom:1px solid var(--bdr);flex-shrink:0;white-space:nowrap}
+.logo-row{display:flex;align-items:center;gap:9px}
+.logo-icon{width:33px;height:33px;background:var(--blue);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.logo-icon svg{width:16px;height:16px;stroke:#fff;fill:none;stroke-width:2.2}
+.logo-name{font-family:var(--display);font-size:14px;font-weight:700}
+.logo-name span{color:var(--blue)}
+.logo-sub{font-size:9px;color:var(--faint);margin-top:1px}
+.sb-nav{flex:1;padding:7px;overflow-y:auto;display:flex;flex-direction:column;gap:1px}
+.nav-sect{font-size:9px;font-weight:700;color:var(--faint);letter-spacing:.1em;text-transform:uppercase;padding:10px 10px 4px;white-space:nowrap}
+.nav-item{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:7px;cursor:pointer;font-size:12px;font-weight:500;color:var(--muted);transition:all .11s;border:none;background:none;width:100%;text-align:left;font-family:var(--font);white-space:nowrap}
+.nav-item:hover{background:var(--surf2);color:var(--txt)}
+.nav-item.active{background:var(--bl);color:var(--blue)}
+.nav-item svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;flex-shrink:0}
+.nav-badge{margin-left:auto;font-size:9px;font-weight:700;background:var(--red);color:#fff;padding:2px 6px;border-radius:20px}
+.sb-foot{padding:11px 13px;border-top:1px solid var(--bdr);flex-shrink:0;white-space:nowrap}
+.user-row{display:flex;align-items:center;gap:8px}
+.user-av{width:28px;height:28px;border-radius:50%;background:var(--blue);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0}
+.user-name{font-size:11px;font-weight:500;color:var(--txt);overflow:hidden;text-overflow:ellipsis}
+.user-role{font-size:10px;color:var(--faint)}
+.logout-btn{margin-left:auto;border:none;background:none;cursor:pointer;color:var(--faint);padding:4px;border-radius:5px;transition:all .11s;flex-shrink:0}
+.logout-btn:hover{background:var(--surf2);color:var(--red)}
+.logout-btn svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;display:block}
+
+/* ══ MAIN ══ */
+.main-area{flex:1;display:flex;flex-direction:column;min-width:0;overflow:hidden}
+.topbar{height:var(--th);background:var(--surf);border-bottom:1px solid var(--bdr);display:flex;align-items:center;padding:0 18px;gap:8px;flex-shrink:0}
+.sb-toggle{background:none;border:none;cursor:pointer;padding:5px;border-radius:6px;color:var(--muted);display:flex;align-items:center;justify-content:center;transition:all .11s;flex-shrink:0}
+.sb-toggle:hover{background:var(--surf2);color:var(--txt)}
+.sb-toggle svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2}
+.tb-title{font-family:var(--display);font-size:14px;font-weight:700;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tb-right{display:flex;align-items:center;gap:7px;flex-shrink:0}
+.chip{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:500;padding:4px 9px;border-radius:20px;border:1px solid var(--bdr);background:var(--surf);color:var(--muted);white-space:nowrap;max-width:160px;overflow:hidden;text-overflow:ellipsis}
+.chip-dot{width:5px;height:5px;border-radius:50%;background:var(--green);flex-shrink:0}
+.chip-dot.off{background:var(--faint)}
+.btn{display:inline-flex;align-items:center;gap:5px;padding:5px 11px;border-radius:7px;font-size:11px;font-weight:500;cursor:pointer;border:1px solid var(--bdr);background:var(--surf);color:var(--txt);font-family:var(--font);transition:all .11s;white-space:nowrap}
+.btn:hover{background:var(--surf2)}.btn svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2}
+.btn-primary{background:var(--blue);color:#fff;border-color:var(--blue)}.btn-primary:hover{background:#1d4ed8}
+.btn-sm{padding:4px 9px;font-size:11px}
+.content{flex:1;overflow-y:auto;padding:18px 22px;display:flex;flex-direction:column;gap:16px}
+
+/* ══ LOADING OVERLAY ══ */
+.loading-overlay{display:none;position:fixed;inset:0;background:rgba(242,245,251,0.88);z-index:500;flex-direction:column;align-items:center;justify-content:center;gap:14px;backdrop-filter:blur(2px)}
+.loading-overlay.show{display:flex}
+.spin-lg{width:42px;height:42px;border:4px solid var(--bdr2);border-top-color:var(--blue);border-radius:50%;animation:spin .85s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-title{font-family:var(--display);font-size:15px;font-weight:700}
+.loading-sub{font-size:11px;color:var(--muted)}
+.loading-prog{width:240px;height:3px;background:var(--surf3);border-radius:2px;overflow:hidden}
+.loading-fill{height:100%;background:var(--blue);border-radius:2px;transition:width .35s ease;width:0%}
+.loading-steps{display:flex;flex-direction:column;gap:5px;margin-top:4px}
+.lstep{font-size:10px;color:var(--faint);display:flex;align-items:center;gap:6px}
+.lstep.done{color:var(--green)}.lstep.active{color:var(--blue)}
+.lstep-dot{width:6px;height:6px;border-radius:50%;background:var(--faint);flex-shrink:0}
+.lstep.done .lstep-dot{background:var(--green)}.lstep.active .lstep-dot{background:var(--blue);animation:pulse 1s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* ══ CARDS ══ */
+.card{background:var(--surf);border:1px solid var(--bdr);border-radius:11px;padding:15px;box-shadow:var(--sh1)}
+.card-title{font-size:12px;font-weight:600;font-family:var(--display);color:var(--txt);margin-bottom:2px}
+.card-sub{font-size:10px;color:var(--muted);margin-bottom:11px}
+
+/* ══ EMPTY STATE ══ */
+.empty-state{display:flex;flex-direction:column;align-items:center;text-align:center;padding:30px 16px;gap:11px}
+.empty-icon{width:50px;height:50px;border-radius:12px;background:var(--surf2);border:1px solid var(--bdr);display:flex;align-items:center;justify-content:center}
+.empty-icon svg{width:22px;height:22px;stroke:var(--faint);fill:none;stroke-width:1.5}
+.empty-title{font-family:var(--display);font-size:14px;font-weight:700}
+.empty-desc{font-size:11px;color:var(--muted);line-height:1.7;max-width:320px}
+
+/* ══ UPLOAD ══ */
+.upload-zone{border:2px dashed var(--bdr2);border-radius:10px;padding:20px;display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;cursor:pointer;transition:all .13s;background:var(--surf)}
+.upload-zone:hover,.upload-zone.drag{border-color:var(--blue);background:var(--bl)}
+.upload-zone svg{width:24px;height:24px;stroke:var(--faint);fill:none;stroke-width:1.5}
+.upload-zone.drag svg{stroke:var(--blue)}
+.upload-label{font-size:12px;font-weight:500}
+.upload-hint{font-size:10px;color:var(--muted)}
+.upload-link{font-size:10px;color:var(--blue);font-weight:500;cursor:pointer;text-decoration:underline}
+#fileInput{display:none}
+.file-bar{display:flex;align-items:center;justify-content:space-between;background:var(--surf);border:1px solid var(--bdr);border-radius:9px;padding:9px 13px;gap:10px;flex-wrap:wrap}
+.file-info{display:flex;align-items:center;gap:9px;min-width:0}
+.file-icon{width:30px;height:30px;border-radius:7px;background:var(--bl);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.file-icon svg{width:14px;height:14px;stroke:var(--blue);fill:none;stroke-width:2}
+.file-name{font-size:11px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:180px}
+.file-meta{font-size:10px;color:var(--muted);margin-top:1px}
+.tag{display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:600;padding:3px 8px;border-radius:20px}
+.tag-g{background:var(--gl);color:var(--green)}.tag-a{background:var(--al);color:var(--amber)}.tag-r{background:var(--rl);color:var(--red)}
+.prog-bar{height:3px;background:var(--surf3);border-radius:2px;overflow:hidden;margin-top:6px}
+.prog-fill{height:100%;background:var(--blue);border-radius:2px;transition:width .28s ease}
+
+/* ── Upload error / warning display ── */
+.upload-feedback{margin-top:10px;border-radius:8px;padding:0;display:none}
+.upload-feedback.show{display:block}
+.uf-header{display:flex;align-items:center;gap:7px;padding:9px 12px;border-radius:8px 8px 0 0;font-size:11px;font-weight:600;cursor:pointer;user-select:none}
+.uf-header.err-h{background:var(--rl);color:var(--red);border:1px solid var(--rm)}
+.uf-header.warn-h{background:var(--al);color:var(--amber);border:1px solid var(--am)}
+.uf-header svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;flex-shrink:0}
+.uf-toggle{margin-left:auto;font-size:10px;opacity:.7}
+.uf-body{background:var(--surf);border:1px solid var(--bdr);border-top:none;border-radius:0 0 8px 8px;padding:10px 12px;display:none}
+.uf-body.open{display:block}
+.uf-error-list{list-style:none;display:flex;flex-direction:column;gap:5px}
+.uf-error-list li{font-size:11px;color:var(--muted);display:flex;align-items:flex-start;gap:6px;line-height:1.5}
+.uf-error-list li::before{content:'→';color:var(--red);flex-shrink:0;font-weight:700}
+.uf-error-list li.warn-item::before{color:var(--amber)}
+.uf-more{font-size:10px;color:var(--faint);margin-top:6px}
+.col-hint{margin-top:10px;background:var(--bl);border-radius:7px;padding:9px 12px}
+.col-hint-title{font-size:10px;font-weight:700;color:var(--blue);letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px}
+.col-hint-row{font-size:11px;color:var(--muted);margin-bottom:3px}
+.col-hint-row span{font-family:var(--mono);color:var(--blue);font-size:10px}
+
+/* ══ ACTION CARDS ══ */
+.acards-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:11px}
+.acard{background:var(--surf);border:1px solid var(--bdr);border-radius:11px;padding:13px;cursor:pointer;transition:all .16s;box-shadow:var(--sh1);position:relative;overflow:hidden}
+.acard::after{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:11px 11px 0 0}
+.acard.c-red::after{background:var(--red)}.acard.c-amber::after{background:var(--amber)}.acard.c-blue::after{background:var(--blue)}.acard.c-teal::after{background:var(--teal)}
+.acard:hover{box-shadow:var(--sh2);transform:translateY(-2px)}
+.acard-top{display:flex;justify-content:space-between;margin-bottom:10px}
+.acard-icon{width:30px;height:30px;border-radius:7px;display:flex;align-items:center;justify-content:center}
+.acard-icon svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2}
+.ai-r{background:var(--rl);color:var(--red)}.ai-a{background:var(--al);color:var(--amber)}.ai-b{background:var(--bl);color:var(--blue)}.ai-t{background:var(--tl);color:var(--teal)}
+.pri{font-size:9px;font-weight:700;padding:2px 6px;border-radius:20px}
+.ph{background:var(--rl);color:var(--red)}.pm{background:var(--al);color:var(--amber)}.pl{background:var(--gl);color:var(--green)}.pi{background:var(--bl);color:var(--blue)}
+.acard-lbl{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:700;margin-bottom:2px}
+.acard-val{font-size:22px;font-weight:700;font-family:var(--display);line-height:1;margin-bottom:3px}
+.acard-unit{font-size:10px;font-weight:400;color:var(--muted);font-family:var(--font)}
+.acard-desc{font-size:10px;color:var(--muted);line-height:1.5;margin-bottom:10px}
+.acard-cta{display:flex;justify-content:space-between;font-size:10px;font-weight:600;color:var(--blue);border-top:1px solid var(--bdr);padding-top:8px}
+.acard-cta svg{width:11px;height:11px;stroke:currentColor;fill:none;stroke-width:2}
+
+/* ══ METRICS ══ */
+.metrics-row{display:grid;grid-template-columns:repeat(5,1fr);gap:9px}
+.mc{background:var(--surf);border:1px solid var(--bdr);border-radius:9px;padding:11px;box-shadow:var(--sh1)}
+.mc-lbl{font-size:9px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px}
+.mc-val{font-size:18px;font-weight:700;font-family:var(--display);line-height:1;margin-bottom:2px}
+.mc-d{font-size:10px;font-weight:500}
+.d-up{color:var(--green)}.d-dn{color:var(--red)}.d-n{color:var(--muted)}
+
+/* ══ CHARTS ══ */
+.chart-row{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+.cw{position:relative}
+
+/* ══ TABLE ══ */
+.tab-row{display:flex;gap:5px;margin-bottom:10px;flex-wrap:wrap}
+.tab-btn{font-size:10px;font-weight:600;padding:4px 11px;border-radius:20px;border:1px solid var(--bdr);background:transparent;color:var(--muted);cursor:pointer;font-family:var(--font);transition:all .1s}
+.tab-btn.active{background:var(--bl);color:var(--blue);border-color:var(--bm)}
+table{width:100%;border-collapse:collapse}
+thead th{font-size:9px;font-weight:700;color:var(--faint);text-transform:uppercase;letter-spacing:.07em;padding:6px 9px;text-align:left;border-bottom:1px solid var(--bdr)}
+tbody td{padding:8px 9px;font-size:11px;color:var(--txt);border-bottom:1px solid var(--bdr)}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover td{background:var(--surf2)}
+.pill{display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px}
+.pr{background:var(--rl);color:var(--red)}.pa{background:var(--al);color:var(--amber)}.pg{background:var(--gl);color:var(--green)}
+.dot{width:5px;height:5px;border-radius:50%;background:currentColor}
+.mono{font-family:var(--mono);font-size:10px}
+
+/* ══ DETAIL PAGES ══ */
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:8px;margin-bottom:11px}
+.kpi{background:var(--surf2);border-radius:8px;padding:9px 11px}
+.kpi-lbl{font-size:9px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px}
+.kpi-val{font-size:16px;font-weight:700;font-family:var(--display)}
+.kpi-sub{font-size:9px;color:var(--muted);margin-top:2px}
+
+/* ══ ALGO EXPLAIN ══ */
+.algo-explain{background:var(--bl);border-left:3px solid var(--blue);border-radius:0 7px 7px 0;padding:9px 13px;margin-bottom:11px}
+.algo-explain-title{font-size:9px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--blue);margin-bottom:3px}
+.algo-explain p{font-size:11px;color:#1e40af;line-height:1.6}
+
+/* ══ XAI BOX ══ */
+.xai-box{background:var(--pl);border-left:3px solid var(--purple);border-radius:0 6px 6px 0;padding:7px 11px;margin-top:6px}
+.xai-lbl{font-size:9px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--purple);margin-bottom:2px}
+.xai-box p{font-size:10px;color:#4c1d95;line-height:1.6}
+
+/* ══ PLAIN-LANGUAGE "WHY THIS MATTERS" CALLOUT ══ */
+/* Seller-facing rationalization layer — narrative, no formulas, no jargon. */
+.insight-box{background:var(--al);border-left:3px solid var(--amber);border-radius:0 7px 7px 0;padding:9px 12px;margin-top:7px;display:flex;gap:8px;align-items:flex-start}
+.insight-box .bulb{font-size:13px;flex-shrink:0;line-height:1.5}
+.insight-box .insight-text{flex:1}
+.insight-lbl{font-size:9px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--amber);margin-bottom:2px}
+.insight-box p{font-size:11px;color:#78350f;line-height:1.65}
+
+/* ══ PROFITABLE / MARGIN-LOSS BADGE ══ */
+.profit-badge{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;padding:5px 11px;border-radius:7px;letter-spacing:.01em;border:1.5px solid transparent}
+.profit-badge.yes{background:var(--gl);color:var(--green);border-color:var(--gm)}
+.profit-badge.no{background:var(--rl);color:var(--red);border-color:var(--rm)}
+.profit-badge svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2.5}
+
+/* ══ RECOMMENDATIONS ══ */
+.rec-section{background:var(--gl);border:1px solid var(--gm);border-radius:9px;padding:11px 13px;margin-top:11px}
+.rec-title{display:flex;align-items:center;gap:6px;font-size:9px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--green);margin-bottom:8px}
+.rec-title svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2}
+.rec-item{display:flex;align-items:flex-start;gap:7px;margin-bottom:6px;font-size:11px;color:#14532d}
+.rec-item:last-child{margin-bottom:0}
+.rec-num{width:17px;height:17px;border-radius:50%;background:var(--green);color:#fff;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+
+/* ══ EVIDENCE LAYER (single-scroll Fast-Action → Deep-Verification structure) ══ */
+.layer-divider{display:flex;align-items:center;gap:10px;margin:6px 0 2px}
+.layer-divider .line{flex:1;height:1px;background:var(--bdr)}
+.layer-divider .label{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);white-space:nowrap;display:flex;align-items:center;gap:6px}
+.layer-divider .label svg{width:13px;height:13px;stroke:var(--faint);fill:none;stroke-width:2}
+.evidence-anchor{scroll-margin-top:70px}
+
+/* ══ ITEM ROWS ══ */
+.item-list{display:flex;flex-direction:column;gap:6px}
+.item-row{background:var(--surf);border:1px solid var(--bdr);border-radius:8px;padding:9px 11px;display:flex;align-items:center;justify-content:space-between;gap:10px;cursor:pointer;transition:all .11s}
+.item-row:hover{border-color:var(--bm);background:var(--bl)}
+.item-left{flex:1;min-width:0}
+.item-name{font-size:11px;font-weight:500}
+.item-sku{font-size:9px;color:var(--muted);font-family:var(--mono)}
+.item-right{display:flex;align-items:center;gap:7px;flex-shrink:0}
+
+/* ══ BUNDLE CARDS ══ */
+.bundle-card{background:var(--surf);border:1px solid var(--bdr);border-radius:9px;padding:11px 13px;margin-bottom:7px}
+.bundle-prods{display:flex;align-items:center;gap:6px;margin-bottom:6px;flex-wrap:wrap}
+.bundle-prod{font-size:11px;font-weight:500;background:var(--surf2);padding:3px 8px;border-radius:5px}
+.bundle-plus{font-size:12px;color:var(--faint)}
+.bundle-stats{display:flex;gap:10px;font-size:10px;color:var(--muted);flex-wrap:wrap}
+.bundle-stat strong{color:var(--txt);font-weight:600}
+.bundle-disc{margin-top:7px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:5px}
+.disc-badge{font-size:10px;font-weight:600;color:var(--green);background:var(--gl);padding:3px 8px;border-radius:5px}
+.fallback-badge{font-size:10px;font-weight:600;color:var(--amber);background:var(--al);padding:3px 8px;border-radius:5px}
+
+/* ══ PROMO SIMULATOR ══ */
+.sim-panel{background:var(--surf2);border-radius:9px;padding:13px;margin-bottom:11px}
+.sim-title{font-size:11px;font-weight:600;color:var(--txt);margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.sim-title svg{width:13px;height:13px;stroke:var(--blue);fill:none;stroke-width:2}
+.sim-row{display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap;margin-bottom:10px}
+.sim-field{display:flex;flex-direction:column;gap:4px}
+.sim-label{font-size:9px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.sim-select,.sim-input{font-size:12px;font-family:var(--font);padding:6px 9px;border-radius:7px;border:1px solid var(--bdr);background:var(--surf);color:var(--txt);outline:none}
+.sim-select:focus,.sim-input:focus{border-color:var(--blue)}
+.sim-input{width:90px;font-family:var(--mono)}
+.sim-result-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px;margin-top:10px}
+.sim-metric{background:var(--surf);border:1px solid var(--bdr);border-radius:8px;padding:9px 11px;text-align:center}
+.sim-metric-lbl{font-size:9px;color:var(--muted);margin-bottom:3px;text-transform:uppercase;letter-spacing:.05em;font-weight:600}
+.sim-metric-val{font-size:15px;font-weight:700;font-family:var(--display)}
+.sim-rec{margin-top:10px;padding:10px 12px;border-radius:7px;font-size:11px;line-height:1.65}
+.sim-rec.good{background:var(--gl);color:#14532d;border:1px solid var(--gm)}
+.sim-rec.bad{background:var(--rl);color:#7f1d1d;border:1px solid var(--rm)}
+.sim-rec.neutral{background:var(--al);color:#78350f;border:1px solid var(--am)}
+.sim-err{font-size:11px;color:var(--red);background:var(--rl);border:1px solid var(--rm);border-radius:7px;padding:8px 11px;margin-top:8px;display:none}
+
+/* ══ STAT ROW ══ */
+.stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:11px}
+.stat-card{background:var(--surf2);border-radius:8px;padding:9px 11px;text-align:center}
+.stat-val{font-size:17px;font-weight:700;font-family:var(--display)}
+.stat-lbl{font-size:9px;color:var(--muted);margin-top:2px}
+
+/* ══ MODAL ══ */
+.modal-bd{display:none;position:fixed;inset:0;background:rgba(10,14,26,.5);z-index:400;align-items:center;justify-content:center;backdrop-filter:blur(3px)}
+.modal-bd.open{display:flex}
+.modal{background:var(--surf);border-radius:13px;border:1px solid var(--bdr);width:90%;max-width:480px;max-height:90vh;overflow-y:auto;padding:20px;box-shadow:var(--sh3);animation:mIn .17s ease}
+.modal-lg{max-width:600px}
+@keyframes mIn{from{opacity:0;transform:translateY(9px) scale(.97)}to{opacity:1;transform:none}}
+.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.modal-title{font-size:13px;font-weight:600;font-family:var(--display)}
+.modal-x{width:24px;height:24px;border-radius:6px;background:var(--surf2);border:none;cursor:pointer;font-size:14px;color:var(--muted);display:flex;align-items:center;justify-content:center}
+.modal-row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--bdr);font-size:11px}
+.modal-row:last-of-type{border-bottom:none}.mk{color:var(--muted)}.mv{font-weight:500}
+.modal-rec{margin-top:9px;padding:9px 11px;border-radius:8px;background:var(--gl);border:1px solid var(--gm)}
+.modal-rec-title{font-size:9px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--green);margin-bottom:4px}
+.modal-rec p{font-size:11px;color:#14532d;line-height:1.6}
+
+/* Requirements modal */
+.col-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:9px 0}
+.col-item{background:var(--surf2);border-radius:6px;padding:7px 9px}
+.col-name{font-family:var(--mono);font-size:10px;font-weight:500;color:var(--blue);margin-bottom:1px}
+.col-desc{font-size:10px;color:var(--muted)}
+.col-req{font-size:8px;font-weight:700;color:var(--red)}.col-opt{font-size:8px;font-weight:700;color:var(--green)}
+.sample-file{display:flex;align-items:center;justify-content:space-between;background:var(--surf2);border-radius:7px;padding:7px 10px;margin-bottom:5px}
+.sf-info{display:flex;align-items:center;gap:7px}
+.sf-emoji{font-size:15px}
+.sf-name{font-size:11px;font-weight:500}
+.sf-desc{font-size:9px;color:var(--muted)}
+.platform-note{font-size:10px;color:var(--muted);background:var(--bl);border:1px solid var(--bm);border-radius:6px;padding:7px 10px;line-height:1.6;margin-bottom:9px}
+
+/* ══ PAGE VISIBILITY ══ */
+.page{display:none}.page.active{display:flex;flex-direction:column;gap:13px}
+.fade-up{animation:fu .3s ease both}
+@keyframes fu{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+
+/* ══ RESPONSIVE ══ */
+@media(max-width:1100px){.acards-grid{grid-template-columns:repeat(2,1fr)}.metrics-row{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:860px){.chart-row{grid-template-columns:1fr}.stat-row{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:640px){.acards-grid{grid-template-columns:1fr 1fr}.metrics-row{grid-template-columns:repeat(2,1fr)}.kpis{grid-template-columns:repeat(2,1fr)}.col-grid{grid-template-columns:1fr}.tb-right .chip{display:none}.content{padding:12px 12px}}
+@media(max-width:400px){.acards-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<!-- LOADING OVERLAY -->
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="spin-lg"></div>
+  <div class="loading-title" id="loadingTitle">Analysing your data…</div>
+  <div class="loading-sub" id="loadingSub">Running I-ODSS algorithms</div>
+  <div class="loading-prog"><div class="loading-fill" id="loadingFill"></div></div>
+  <div class="loading-steps" id="loadingSteps">
+    <div class="lstep" id="ls-validate"><span class="lstep-dot"></span>Validating & mapping columns</div>
+    <div class="lstep" id="ls-rop"><span class="lstep-dot"></span>Computing ROP per SKU</div>
+    <div class="lstep" id="ls-ped"><span class="lstep-dot"></span>Estimating Price Elasticity (PED)</div>
+    <div class="lstep" id="ls-fpg"><span class="lstep-dot"></span>Running FP-Growth basket analysis</div>
+    <div class="lstep" id="ls-sarima"><span class="lstep-dot"></span>Generating SARIMA demand forecast</div>
+    <div class="lstep" id="ls-eda"><span class="lstep-dot"></span>Building EDA charts</div>
+  </div>
+</div>
+
+<div class="layout">
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <div class="sb-inner">
+    <div class="sb-logo">
+      <div class="logo-row">
+        <div class="logo-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M14 17h7M17 14v7"/></svg></div>
+        <div><div class="logo-name"><span>I</span>-ODSS</div><div class="logo-sub">Decision Support · v6</div></div>
+      </div>
+    </div>
+    <nav class="sb-nav">
+      <div class="nav-sect">Overview</div>
+      <button class="nav-item active" onclick="showPage('dashboard',this)"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>Dashboard</button>
+      <div class="nav-sect">Action Cards</div>
+      <button class="nav-item" onclick="showPage('inventory',this)"><svg viewBox="0 0 24 24"><path d="M20 7H4a2 2 0 00-2 2v6a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2z"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>Inventory & ROP<span class="nav-badge" id="navBadge" style="display:none">0</span></button>
+      <button class="nav-item" onclick="showPage('pricing',this)"><svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>Dynamic Pricing</button>
+      <button class="nav-item" onclick="showPage('bundles',this)"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 3l-4 4-4-4"/></svg>Product Bundles</button>
+      <button class="nav-item" onclick="showPage('forecast',this)"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>Demand Forecast</button>
+      <div class="nav-sect">Analysis & Tools</div>
+      <button class="nav-item" onclick="showPage('eda',this)"><svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>EDA Dashboard</button>
+      <button class="nav-item" onclick="showPage('promo',this)"><svg viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>Promo Simulator</button>
+    </nav>
+    <div class="sb-foot">
+      <div class="user-row">
+        <div class="user-av" id="userAv">S</div>
+        <div style="min-width:0"><div class="user-name" id="userName">Seller</div><div class="user-role">SME Account</div></div>
+        <button class="logout-btn" onclick="logout()" title="Sign out"><svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></button>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main-area">
+  <div class="topbar">
+    <button class="sb-toggle" onclick="toggleSidebar()"><svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+    <div class="tb-title" id="pageTitle">Dashboard</div>
+    <div class="tb-right">
+      <div class="chip"><span class="chip-dot off" id="chipDot"></span><span id="chipTxt">No data loaded</span></div>
+      <button class="btn btn-sm" onclick="openReqModal()"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Requirements</button>
+      <button class="btn btn-primary" onclick="triggerUpload()"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>Upload CSV</button>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- ══ DASHBOARD ══ -->
+    <div class="page active" id="page-dashboard">
+      <!-- Upload card (always visible) -->
+      <div class="card" id="uploadCard">
+        <div class="card-title" style="margin-bottom:4px">Upload your transaction data</div>
+        <div class="card-sub" style="margin-bottom:10px">Accepts Shopee, Lazada, TikTok Shop exports or any custom CSV. <span class="upload-link" onclick="openReqModal()">View column requirements →</span></div>
+        <div class="upload-zone" id="uploadZone" onclick="triggerUpload()" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="dropFile(event)">
+          <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          <div class="upload-label">Click to upload or drag & drop your CSV file</div>
+          <div class="upload-hint">Flexible column mapping — auto-detects Shopee / Lazada / TikTok Shop headers</div>
+        </div>
+        <div id="uploadProg" style="display:none">
+          <div style="font-size:10px;color:var(--muted);margin-top:6px" id="uploadMsg">Uploading…</div>
+          <div class="prog-bar"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
+        </div>
+        <!-- Inline validation feedback -->
+        <div class="upload-feedback" id="uploadFeedback">
+          <div class="uf-header" id="ufHeader" onclick="toggleFeedbackBody()">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <span id="ufHeaderText">Issues found</span>
+            <span class="uf-toggle" id="ufToggle">▼ Show details</span>
+          </div>
+          <div class="uf-body" id="ufBody">
+            <ul class="uf-error-list" id="ufList"></ul>
+            <div id="ufMore" class="uf-more"></div>
+            <div id="ufColHint" class="col-hint" style="display:none">
+              <div class="col-hint-title">Column name guide</div>
+              <div class="col-hint-row">SKU: <span>sku, product_name, item_name, SellerSKU, ProductName…</span></div>
+              <div class="col-hint-row">Date: <span>date, order_date, created_at, waktu pesanan…</span></div>
+              <div class="col-hint-row">Quantity: <span>quantity, qty, units, jumlah, kuantiti…</span></div>
+              <div class="col-hint-row">Price: <span>price, unit_price, selling_price, harga, UnitPrice…</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- File bar (shown after successful upload) -->
+      <div id="fileBar" style="display:none" class="file-bar fade-up">
+        <div class="file-info">
+          <div class="file-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+          <div><div class="file-name" id="fName">—</div><div class="file-meta" id="fMeta">—</div></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:6px">
+          <span class="tag tag-g">✓ Analysed</span>
+          <span id="warnTag" style="display:none" class="tag tag-a"></span>
+          <button class="btn btn-sm" onclick="triggerUpload()">Change data</button>
+        </div>
+      </div>
+
+      <!-- Dashboard data (shown after upload) -->
+      <div id="dashData" style="display:none;flex-direction:column;gap:14px">
+
+        <!-- ═══════════════ EXECUTION LAYER ═══════════════
+             Fast-action: color-coded prescriptive cards rendered the moment
+             the file finishes parsing. Sellers act here without reading charts. -->
+        <div>
+          <div class="layer-divider" style="margin-top:0">
+            <span class="label"><svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>Execution layer — take action now</span>
+            <span class="line"></span>
+          </div>
+          <div style="font-size:10px;color:var(--muted);margin-bottom:9px">Color-coded by urgency. Click any card to jump to full analysis & recommendations.</div>
+          <div class="acards-grid">
+            <div class="acard c-red fade-up" onclick="gotoPage('inventory')">
+              <div class="acard-top"><div class="acard-icon ai-r"><svg viewBox="0 0 24 24"><path d="M20 7H4a2 2 0 00-2 2v6a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2z"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg></div><span class="pri ph">High priority</span></div>
+              <div class="acard-lbl">Inventory · ROP</div><div class="acard-val" id="ac-inv-val">—</div>
+              <div class="acard-desc" id="ac-inv-desc">—</div>
+              <div class="acard-cta">Details & recommendations <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+            </div>
+            <div class="acard c-amber fade-up" onclick="gotoPage('pricing')">
+              <div class="acard-top"><div class="acard-icon ai-a"><svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div><span class="pri pm">Medium</span></div>
+              <div class="acard-lbl">Pricing · PED</div><div class="acard-val" id="ac-price-val">—</div>
+              <div class="acard-desc" id="ac-price-desc">—</div>
+              <div class="acard-cta">Details & recommendations <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+            </div>
+            <div class="acard c-blue fade-up" onclick="gotoPage('bundles')">
+              <div class="acard-top"><div class="acard-icon ai-b"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 3l-4 4-4-4"/></svg></div><span class="pri pi">Opportunity</span></div>
+              <div class="acard-lbl">Bundles · FP-Growth</div><div class="acard-val" id="ac-bundle-val">—</div>
+              <div class="acard-desc" id="ac-bundle-desc">—</div>
+              <div class="acard-cta">Details & recommendations <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+            </div>
+            <div class="acard c-teal fade-up" onclick="gotoPage('forecast')">
+              <div class="acard-top"><div class="acard-icon ai-t"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div><span class="pri pl">Forecast</span></div>
+              <div class="acard-lbl">Forecast · SARIMA</div><div class="acard-val" id="ac-fc-val">—</div>
+              <div class="acard-desc" id="ac-fc-desc">—</div>
+              <div class="acard-cta">Details & recommendations <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+            </div>
+          </div>
+          <!-- Plain-language "why this matters" callout for the single most urgent issue -->
+          <div id="topInsight" style="display:none"></div>
+        </div>
+
+        <!-- ═══════════════ EVIDENCE LAYER ═══════════════
+             Deep-verification: sellers scroll down to see the underlying
+             charts and build trust in the prescriptions above. -->
+        <div class="evidence-anchor" id="evidenceLayer">
+          <div class="layer-divider">
+            <span class="label"><svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>Evidence layer — verify the numbers</span>
+            <span class="line"></span>
+          </div>
+          <div style="font-size:10px;color:var(--muted);margin-bottom:9px">The charts below show the raw data behind every recommendation above.</div>
+          <div class="metrics-row fade-up">
+            <div class="mc"><div class="mc-lbl">Revenue</div><div class="mc-val" id="mRev">—</div><div class="mc-d d-n" id="mRevD">—</div></div>
+            <div class="mc"><div class="mc-lbl">Orders</div><div class="mc-val" id="mOrd">—</div><div class="mc-d d-n" id="mOrdD">—</div></div>
+            <div class="mc"><div class="mc-lbl">Avg. Order Value</div><div class="mc-val" id="mAov">—</div><div class="mc-d d-n">Per order</div></div>
+            <div class="mc"><div class="mc-lbl">SKUs at Risk</div><div class="mc-val" id="mRisk">—</div><div class="mc-d d-dn">Review now</div></div>
+            <div class="mc"><div class="mc-lbl">Total SKUs</div><div class="mc-val" id="mSkus">—</div><div class="mc-d d-n" id="mSkuD">—</div></div>
+          </div>
+          <div class="chart-row fade-up">
+            <div class="card"><div class="card-title">Weekly sales trend</div><div class="card-sub">Units sold per week</div><div class="cw" style="height:185px"><canvas id="dashSales"></canvas></div></div>
+            <div class="card"><div class="card-title">Top SKUs by revenue</div><div class="card-sub">RM contribution</div><div class="cw" style="height:185px"><canvas id="dashSku"></canvas></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ INVENTORY ══ -->
+    <div class="page" id="page-inventory">
+      <div class="card fade-up">
+        <div class="algo-explain"><div class="algo-explain-title">Algorithm: Reorder Point (ROP)</div><p><strong>ROP = (Avg Daily Demand × Lead Time) + Safety Stock</strong>. Velocity computed per SKU from your data. Category-specific lead times applied. Simulated stock = 8% of total sold (prototype). XAI explanation shown per SKU.</p></div>
+        <div id="invEmpty" class="empty-state"><div class="empty-icon"><svg viewBox="0 0 24 24"><path d="M20 7H4a2 2 0 00-2 2v6a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2z"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg></div><div class="empty-title">No data loaded</div><div class="empty-desc">Upload a CSV to compute ROP per SKU and get restock recommendations.</div><button class="btn btn-primary" onclick="triggerUpload()">Upload CSV</button></div>
+        <div id="invData" style="display:none">
+          <div class="kpis" id="invKpis"></div>
+          <div class="tab-row"><button class="tab-btn active" onclick="filterInv('all',this)">All</button><button class="tab-btn" onclick="filterInv('critical',this)">Critical</button><button class="tab-btn" onclick="filterInv('warning',this)">Watch</button><button class="tab-btn" onclick="filterInv('ok',this)">Healthy</button></div>
+          <div class="item-list" id="invList"></div>
+          <div id="invRec"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ PRICING ══ -->
+    <div class="page" id="page-pricing">
+      <div class="card fade-up">
+        <div class="algo-explain"><div class="algo-explain-title">Algorithm: Price Elasticity of Demand (PED) + XAI</div><p><strong>PED = % Change in Qty ÷ % Change in Price</strong>. Each SKU gets a full XAI explanation showing the category benchmark, velocity modifier, and expected weekly revenue delta. Use the Promo Simulator tab to test specific discount scenarios.</p></div>
+        <div id="priceEmpty" class="empty-state"><div class="empty-icon"><svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div><div class="empty-title">No data loaded</div><div class="empty-desc">Upload a CSV to compute PED scores and pricing recommendations.</div><button class="btn btn-primary" onclick="triggerUpload()">Upload CSV</button></div>
+        <div id="priceData" style="display:none">
+          <div class="kpis" id="priceKpis"></div>
+          <div class="item-list" id="priceList"></div>
+          <div id="priceRec"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ BUNDLES ══ -->
+    <div class="page" id="page-bundles">
+      <div class="card fade-up">
+        <div class="algo-explain"><div class="algo-explain-title">Algorithm: FP-Growth Market Basket Analysis</div><p><strong>Lift ≥ 1.2</strong> threshold applied. Orders are first grouped by OrderID to form shopping baskets. If multi-item basket volume is low, a co-occurrence fallback ensures bundle cards always populate. Cross-PED and ideal bundle price computed per pair.</p></div>
+        <div id="bundleEmpty" class="empty-state"><div class="empty-icon"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 3l-4 4-4-4"/></svg></div><div class="empty-title">No data loaded</div><div class="empty-desc">Upload a CSV with multi-item orders (same OrderID, multiple SKUs) for FP-Growth basket analysis.</div><button class="btn btn-primary" onclick="triggerUpload()">Upload CSV</button></div>
+        <div id="bundleData" style="display:none">
+          <div class="kpis" id="bundleKpis"></div>
+          <div id="bundleMode" style="display:none;margin-bottom:8px"></div>
+          <div id="bundleList"></div>
+          <div id="bundleRec"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ FORECAST ══ -->
+    <div class="page" id="page-forecast">
+      <div class="card fade-up">
+        <div class="algo-explain"><div class="algo-explain-title">Algorithm: SARIMA (1,1,1)(1,1,0)[7] Demand Forecast</div><p>Weekly sales are decomposed into trend, seasonality (7-week cycle), and residual. 4-week projection with 90% confidence interval. Use the forecast peak weeks to pre-position inventory before demand spikes.</p></div>
+        <div id="forecastEmpty" class="empty-state"><div class="empty-icon"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div><div class="empty-title">No data loaded</div><div class="empty-desc">Upload a CSV to generate the SARIMA demand forecast.</div><button class="btn btn-primary" onclick="triggerUpload()">Upload CSV</button></div>
+        <div id="forecastData" style="display:none">
+          <div id="forecastInsight" style="margin-bottom:11px"></div>
+          <div class="kpis" id="forecastKpis"></div>
+          <div class="cw" style="height:250px;margin-bottom:12px"><canvas id="forecastChart"></canvas></div>
+          <div id="forecastRec"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ EDA ══ -->
+    <div class="page" id="page-eda">
+      <div id="edaEmpty" class="card fade-up"><div class="empty-state"><div class="empty-icon"><svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div><div class="empty-title">EDA Dashboard</div><div class="empty-desc">Upload a CSV to explore revenue by category, regional breakdown, demand trend, SKU units, rating distribution, and return rates.</div><button class="btn btn-primary" onclick="triggerUpload()">Upload CSV</button></div></div>
+      <div id="edaData" style="display:none;flex-direction:column;gap:13px">
+        <div class="card fade-up"><div class="card-title">Dataset summary</div><div class="card-sub">Key statistics from your uploaded file</div><div class="stat-row" id="edaStats"></div></div>
+        <div class="chart-row fade-up">
+          <div class="card"><div class="card-title">Revenue by category</div><div class="card-sub">RM contribution (donut)</div><div class="cw" style="height:195px"><canvas id="catChart"></canvas></div></div>
+          <div class="card"><div class="card-title">Revenue & orders by region</div><div class="card-sub">Grouped bar comparison</div><div class="cw" style="height:195px"><canvas id="regChart"></canvas></div></div>
+        </div>
+        <div class="chart-row fade-up">
+          <div class="card"><div class="card-title">Weekly demand trend</div><div class="card-sub">Units sold per week</div><div class="cw" style="height:185px"><canvas id="dailyChart"></canvas></div></div>
+          <div class="card"><div class="card-title">Units sold per SKU</div><div class="card-sub">Top products by quantity</div><div class="cw" style="height:185px"><canvas id="unitsChart"></canvas></div></div>
+        </div>
+        <div class="chart-row fade-up">
+          <div class="card"><div class="card-title">Rating distribution</div><div class="card-sub">Customer satisfaction buckets</div><div class="cw" style="height:175px"><canvas id="ratingChart"></canvas></div></div>
+          <div class="card"><div class="card-title">Revenue vs est. returns cost</div><div class="card-sub">By category</div><div class="cw" style="height:175px"><canvas id="returnChart"></canvas></div></div>
+        </div>
+        <div class="card fade-up"><div class="card-title">Full SKU performance table</div><div class="card-sub">All metrics per product — sorted by revenue</div>
+          <table><thead><tr><th>SKU</th><th>Product</th><th>Category</th><th>Units</th><th>Revenue (RM)</th><th>Velocity (u/day)</th><th>Avg Rating</th><th>Return Rate</th></tr></thead><tbody id="edaBody"></tbody></table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ PROMO SIMULATOR ══ -->
+    <div class="page" id="page-promo">
+      <div class="card fade-up">
+        <div class="algo-explain"><div class="algo-explain-title">What-If Tool: Promo-Code Impact Simulator</div><p>Enter a hypothetical discount percentage for any SKU. The simulator uses the computed <strong>PED</strong> to predict: volume change, projected weekly revenue, projected weekly profit, and whether the promotion is actually profitable. Assumes 40% gross margin baseline.</p></div>
+        <div id="promoEmpty" class="empty-state"><div class="empty-icon"><svg viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg></div><div class="empty-title">No data loaded</div><div class="empty-desc">Upload a CSV first, then use the promo simulator to test discount scenarios on any SKU before going live.</div><button class="btn btn-primary" onclick="triggerUpload()">Upload CSV</button></div>
+        <div id="promoSimulator" style="display:none">
+          <div class="sim-panel">
+            <div class="sim-title"><svg viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>Configure promo scenario</div>
+            <div class="sim-row">
+              <div class="sim-field" style="flex:1;min-width:180px">
+                <div class="sim-label">Select product (SKU)</div>
+                <select class="sim-select" id="promoSku" style="width:100%"><option value="">— Choose a product —</option></select>
+              </div>
+              <div class="sim-field">
+                <div class="sim-label">Promo discount %</div>
+                <input class="sim-input" type="number" id="promoDisc" value="20" min="1" max="80" step="1" placeholder="e.g. 20"/>
+              </div>
+              <div class="sim-field" style="align-self:flex-end">
+                <button class="btn btn-primary" onclick="runPromoSim()" id="promoBtn">
+                  <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg> Run simulation
+                </button>
+              </div>
+            </div>
+            <div class="sim-err" id="simErr"></div>
+          </div>
+
+          <!-- Results (hidden until simulation runs) -->
+          <div id="promoResults" style="display:none">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;flex-wrap:wrap;gap:8px">
+              <div style="font-size:10px;font-weight:700;color:var(--faint);letter-spacing:.08em;text-transform:uppercase">Simulation results</div>
+              <span class="profit-badge" id="promoProfitBadge"></span>
+            </div>
+            <div class="sim-result-grid" id="promoGrid"></div>
+            <div class="sim-rec" id="promoRec"></div>
+            <div class="xai-box" id="promoXai" style="margin-top:10px"><div class="xai-lbl">XAI — How was this calculated?</div><p id="promoXaiText"></p></div>
+          </div>
+
+          <!-- Quick guide -->
+          <div class="rec-section" style="margin-top:12px">
+            <div class="rec-title"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>How to use the promo simulator</div>
+            <div class="rec-item"><span class="rec-num">1</span><span>Select a product from your uploaded data in the dropdown above.</span></div>
+            <div class="rec-item"><span class="rec-num">2</span><span>Enter a discount percentage (1–80%). This represents a platform promo code or markdown.</span></div>
+            <div class="rec-item"><span class="rec-num">3</span><span>Click Run simulation. The system uses the SKU's PED score to predict volume uplift and revenue/profit impact.</span></div>
+            <div class="rec-item"><span class="rec-num">4</span><span>If the promo is not profitable (PED too low = inelastic), try a smaller discount or use the Bundles tab to increase AOV instead.</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /main-area -->
+</div><!-- /layout -->
+
+<!-- DETAIL MODAL -->
+<div class="modal-bd" id="modalBd" onclick="if(event.target===this)closeModal()">
+  <div class="modal"><div class="modal-head"><span class="modal-title" id="modalTitle">Details</span><button class="modal-x" onclick="closeModal()">✕</button></div><div id="modalContent"></div></div>
+</div>
+
+<!-- REQUIREMENTS MODAL -->
+<div class="modal-bd" id="reqBd" onclick="if(event.target===this)document.getElementById('reqBd').classList.remove('open')">
+  <div class="modal modal-lg">
+    <div class="modal-head"><span class="modal-title">CSV Data Requirements</span><button class="modal-x" onclick="document.getElementById('reqBd').classList.remove('open')">✕</button></div>
+    <div class="platform-note">I-ODSS auto-detects column names from <strong>Shopee, Lazada, TikTok Shop</strong> exports and any custom CSV. Column names are case-insensitive. If your file uses non-standard headers, the system will show you exactly what it found vs what it needed.</div>
+    <p style="font-size:11px;color:var(--muted);margin-bottom:9px">Four columns are required. All others are optional but improve analysis quality.</p>
+    <div class="col-grid">
+      <div class="col-item"><div class="col-name">SKU / ProductName <span class="col-req">Required</span></div><div class="col-desc">sku, product_sku, ProductName, item_name, SellerSKU, sellersku, product id…</div></div>
+      <div class="col-item"><div class="col-name">Date <span class="col-req">Required</span></div><div class="col-desc">date, order_date, created_at, waktu pesanan, timestamp, tarikh…</div></div>
+      <div class="col-item"><div class="col-name">Quantity <span class="col-req">Required</span></div><div class="col-desc">quantity, qty, units, unit_sold, jumlah, kuantiti…</div></div>
+      <div class="col-item"><div class="col-name">Price <span class="col-req">Required</span></div><div class="col-desc">price, unit_price, selling_price, harga, UnitPrice, harga asal…</div></div>
+      <div class="col-item"><div class="col-name">OrderID <span class="col-opt">Recommended</span></div><div class="col-desc">orderid, order_id, order_number, no pesanan — needed for FP-Growth bundling</div></div>
+      <div class="col-item"><div class="col-name">Category <span class="col-opt">Optional</span></div><div class="col-desc">category, kategori — improves PED and ROP accuracy</div></div>
+      <div class="col-item"><div class="col-name">Region <span class="col-opt">Optional</span></div><div class="col-desc">region, state, negeri, buyer_state — for regional EDA charts</div></div>
+      <div class="col-item"><div class="col-name">Rating / Returns <span class="col-opt">Optional</span></div><div class="col-desc">rating, review, returns, refund — for EDA quality metrics</div></div>
+    </div>
+    <div style="font-size:10px;font-weight:700;color:var(--faint);letter-spacing:.08em;text-transform:uppercase;margin:12px 0 8px">Sample test files</div>
+    <div class="sample-file"><div class="sf-info"><span class="sf-emoji">💻</span><div><div class="sf-name">data_electronics.csv</div><div class="sf-desc">150 rows · Electronics & Peripherals · 8 SKUs</div></div></div><button class="btn btn-sm" onclick="window.open('/static/samples/data_electronics.csv')">Download</button></div>
+    <div class="sample-file"><div class="sf-info"><span class="sf-emoji">📦</span><div><div class="sf-name">data_bundling_test.csv</div><div class="sf-desc">220+ rows · Multi-item orders · Tests all 4 action cards incl. FP-Growth</div></div></div><button class="btn btn-sm" onclick="window.open('/static/samples/data_bundling_test.csv')">Download</button></div>
+    <div class="sample-file"><div class="sf-info"><span class="sf-emoji">👗</span><div><div class="sf-name">data_fashion.csv</div><div class="sf-desc">100 rows · Fashion & Apparel · 8 SKUs</div></div></div><button class="btn btn-sm" onclick="window.open('/static/samples/data_fashion.csv')">Download</button></div>
+    <div class="sample-file"><div class="sf-info"><span class="sf-emoji">✨</span><div><div class="sf-name">data_beauty.csv</div><div class="sf-desc">100 rows · Health & Beauty · 8 SKUs</div></div></div><button class="btn btn-sm" onclick="window.open('/static/samples/data_beauty.csv')">Download</button></div>
+  </div>
+</div>
+
+<input type="file" id="fileInput" accept=".csv" onchange="handleFile(this.files[0])"/>
+
+<script>
+// ── AUTH ──────────────────────────────────────────────────────────────────
+const user = JSON.parse(localStorage.getItem('iodss_user') || 'null');
+if (!user) { window.location.href = '/'; }
+else {
+  const n = user.name || user.email.split('@')[0];
+  document.getElementById('userName').textContent = n;
+  document.getElementById('userAv').textContent = n[0].toUpperCase();
+}
+function logout() { localStorage.removeItem('iodss_user'); window.location.href = '/'; }
+
+// ── SIDEBAR ───────────────────────────────────────────────────────────────
+let sbOpen = true;
+function toggleSidebar() {
+  sbOpen = !sbOpen;
+  document.getElementById('sidebar').classList.toggle('collapsed', !sbOpen);
+}
+
+// ── NAV ───────────────────────────────────────────────────────────────────
+const PAGE_TITLES = {
+  dashboard: 'Dashboard', inventory: 'Inventory & Reorder Point',
+  pricing: 'Dynamic Pricing (PED)', bundles: 'Product Bundles (FP-Growth)',
+  forecast: 'Demand Forecast (SARIMA)', eda: 'EDA Dashboard',
+  promo: 'Promo-Code Impact Simulator',
+};
+function showPage(id, btn) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  if (btn) btn.classList.add('active');
+  document.getElementById('pageTitle').textContent = PAGE_TITLES[id] || id;
+  if (window.innerWidth <= 700) document.getElementById('sidebar').classList.add('collapsed');
+}
+function gotoPage(id) {
+  const nav = document.querySelector(`.nav-item[onclick*="'${id}'"]`);
+  showPage(id, nav);
+}
+
+// ── LOADING ───────────────────────────────────────────────────────────────
+const STEPS = ['validate','rop','ped','fpg','sarima','eda'];
+function showLoading(title='Analysing data…', sub='Running I-ODSS algorithms') {
+  document.getElementById('loadingTitle').textContent = title;
+  document.getElementById('loadingSub').textContent = sub;
+  document.getElementById('loadingFill').style.width = '0%';
+  STEPS.forEach(s => document.getElementById('ls-'+s).className = 'lstep');
+  document.getElementById('loadingOverlay').classList.add('show');
+}
+function hideLoading() { document.getElementById('loadingOverlay').classList.remove('show'); }
+function setStep(step, state = 'active') {
+  const idx = STEPS.indexOf(step);
+  STEPS.forEach((s, i) => {
+    const el = document.getElementById('ls-'+s);
+    el.className = 'lstep' + (i < idx ? ' done' : s === step ? ' '+state : '');
+  });
+  document.getElementById('loadingFill').style.width = ((idx+1)/STEPS.length*100) + '%';
+}
+
+// ── UPLOAD ────────────────────────────────────────────────────────────────
+let charts = {}, promoSkuCache = [];
+
+function triggerUpload() { document.getElementById('fileInput').click(); }
+function dragOver(e) { e.preventDefault(); document.getElementById('uploadZone').classList.add('drag'); }
+function dragLeave() { document.getElementById('uploadZone').classList.remove('drag'); }
+function dropFile(e) { e.preventDefault(); dragLeave(); if (e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]); }
+
+async function handleFile(file) {
+  if (!file) return;
+  const fd = new FormData();
+  fd.append('file', file);
+  const prog = document.getElementById('uploadProg');
+  const fill = document.getElementById('progFill');
+  const msg  = document.getElementById('uploadMsg');
+
+  hideFeedback();
+  prog.style.display = 'block';
+  msg.textContent = 'Uploading…';
+  fill.style.width = '15%';
+
+  try {
+    const r = await fetch('/api/upload', { method: 'POST', body: fd });
+    fill.style.width = '70%';
+    const d = await r.json();
+
+    if (!r.ok) {
+      // ── Show detailed validation errors inline ──
+      fill.style.width = '0%';
+      prog.style.display = 'none';
+      const detail = d.detail || {};
+      showFeedback('error', detail.message || 'Upload failed', detail.errors || [], detail.type);
+      return;
+    }
+
+    fill.style.width = '100%';
+    setTimeout(() => {
+      prog.style.display = 'none';
+      // Show non-fatal warnings if any
+      if (d.warnings && d.warnings.length > 0) {
+        showFeedback('warning',
+          `${d.warning_count} row(s) had issues and were skipped`,
+          d.warnings, 'row_warnings');
+      } else {
+        hideFeedback();
+      }
+      onLoaded(d);
+    }, 350);
+
+  } catch (e) {
+    fill.style.width = '0%';
+    prog.style.display = 'none';
+    showFeedback('error', 'Cannot reach server — is the backend running?', [e.message], 'network_error');
+  }
+}
+
+// ── FEEDBACK UI ───────────────────────────────────────────────────────────
+function showFeedback(type, headerText, errors, errorType) {
+  const fb  = document.getElementById('uploadFeedback');
+  const hdr = document.getElementById('ufHeader');
+  const htxt= document.getElementById('ufHeaderText');
+  const lst = document.getElementById('ufList');
+  const more= document.getElementById('ufMore');
+  const hint= document.getElementById('ufColHint');
+  const body= document.getElementById('ufBody');
+
+  fb.classList.add('show');
+  hdr.className = 'uf-header ' + (type === 'error' ? 'err-h' : 'warn-h');
+  htxt.textContent = headerText;
+  document.getElementById('ufToggle').textContent = '▼ Show details';
+  body.classList.remove('open');
+
+  const MAX_SHOW = 10;
+  lst.innerHTML = errors.slice(0, MAX_SHOW).map(e =>
+    `<li class="${type === 'warning' ? 'warn-item' : ''}">${e}</li>`
+  ).join('');
+  more.textContent = errors.length > MAX_SHOW
+    ? `… and ${errors.length - MAX_SHOW} more issues. Fix these and re-upload.`
+    : '';
+
+  hint.style.display = (errorType === 'missing_columns') ? 'block' : 'none';
+
+  // Auto-expand on errors
+  if (type === 'error') {
+    body.classList.add('open');
+    document.getElementById('ufToggle').textContent = '▲ Hide details';
+  }
+}
+function hideFeedback() {
+  document.getElementById('uploadFeedback').classList.remove('show');
+}
+function toggleFeedbackBody() {
+  const body = document.getElementById('ufBody');
+  const tog  = document.getElementById('ufToggle');
+  const open = body.classList.toggle('open');
+  tog.textContent = open ? '▲ Hide details' : '▼ Show details';
+}
+
+// ── ON LOAD ───────────────────────────────────────────────────────────────
+async function onLoaded(res) {
+  document.getElementById('chipDot').classList.remove('off');
+  document.getElementById('chipTxt').textContent = res.filename;
+  document.getElementById('fileBar').style.display = 'flex';
+  document.getElementById('fName').textContent = res.filename;
+  document.getElementById('fMeta').textContent =
+    `${res.rows} rows · ${res.skus} SKUs · ${res.date_range || ''}`;
+
+  if (res.warnings && res.warnings.length > 0) {
+    const wt = document.getElementById('warnTag');
+    wt.style.display = '';
+    wt.textContent = `⚠ ${res.warning_count} rows skipped`;
+  }
+
+  document.getElementById('dashData').style.cssText = 'display:flex;flex-direction:column;gap:14px';
+  Object.values(charts).forEach(c => { try { c.destroy(); } catch(e){} });
+  charts = {};
+
+  showLoading('Running I-ODSS algorithms…', 'SARIMA · FP-Growth · PED · ROP');
+
+  try {
+    setStep('validate','active');
+    const [metrics, inv] = await Promise.all([api('/metrics'), api('/inventory')]);
+    setStep('validate','done'); setStep('rop','active');
+    await sleep(120);
+    const [pricing, skuList] = await Promise.all([api('/pricing'), api('/sku-list')]);
+    setStep('rop','done'); setStep('ped','active');
+    promoSkuCache = skuList.skus || [];
+    populatePromoSku(promoSkuCache);
+    setStep('ped','done'); setStep('fpg','active');
+    const bundles = await api('/bundles');
+    setStep('fpg','done'); setStep('sarima','active');
+    const forecast = await api('/forecast');
+    setStep('sarima','done'); setStep('eda','active');
+    const [sales, topSkus, cat, reg] = await Promise.all([
+      api('/sales-trend'), api('/top-skus'),
+      api('/category-breakdown'), api('/regional'),
+    ]);
+    setStep('eda','done');
+    document.getElementById('loadingFill').style.width = '100%';
+    await sleep(380);
+
+    renderMetrics(metrics);
+    renderInventory(inv);
+    renderPricing(pricing);
+    renderBundles(bundles);
+    renderForecast(forecast);
+    renderDashCharts(sales, topSkus);
+    renderEDA(metrics, cat, reg, sales, inv);
+    renderPromoPage();
+
+  } finally {
+    hideLoading();
+  }
+}
+
+async function api(path) {
+  const r = await fetch('/api' + path);
+  return r.json();
+}
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+// ── METRICS ───────────────────────────────────────────────────────────────
+function renderMetrics(d) {
+  document.getElementById('mRev').textContent  = 'RM ' + Math.round(d.revenue).toLocaleString();
+  document.getElementById('mOrd').textContent  = d.orders.toLocaleString();
+  document.getElementById('mAov').textContent  = 'RM ' + d.aov.toFixed(2);
+  document.getElementById('mRisk').textContent = d.at_risk;
+  document.getElementById('mSkus').textContent = d.skus_count;
+  document.getElementById('mRevD').textContent = d.days_of_data + ' days of data';
+  document.getElementById('mOrdD').textContent = d.units + ' total units';
+  document.getElementById('mSkuD').textContent = 'Unique products tracked';
+}
+
+// ── INVENTORY ─────────────────────────────────────────────────────────────
+let invCache = [];
+function renderInventory(d) {
+  invCache = d.items;
+  const crit = d.items.filter(i => i.status === 'critical').length;
+  const warn = d.items.filter(i => i.status === 'warning').length;
+
+  document.getElementById('ac-inv-val').textContent  = crit + ' SKUs';
+  document.getElementById('ac-inv-desc').textContent = crit > 0
+    ? `${crit} critical, ${warn} to watch. Stockout risk detected.`
+    : `${warn} SKUs approaching ROP. All others healthy.`;
+
+  const badge = document.getElementById('navBadge');
+  if (crit > 0) { badge.style.display = ''; badge.textContent = crit; }
+  else badge.style.display = 'none';
+
+  document.getElementById('invKpis').innerHTML = kpiH([
+    {l:'Critical', v:crit, c:'var(--red)',   s:'Below ROP — reorder now'},
+    {l:'Watch',    v:warn, c:'var(--amber)', s:'Approaching ROP'},
+    {l:'Healthy',  v:d.items.filter(i=>i.status==='ok').length, c:'var(--green)', s:'Above ROP'},
+    {l:'Total SKUs',v:d.items.length, c:'var(--txt)', s:'In dataset'},
+  ]);
+
+  renderInvList(invCache);
+
+  // ── Top-of-dashboard plain-language insight (most urgent SKU only) ──
+  const topInsightEl = document.getElementById('topInsight');
+  const mostUrgent = d.items.find(i => i.status === 'critical') || d.items.find(i => i.status === 'warning');
+  if (mostUrgent && mostUrgent.plain_explain) {
+    topInsightEl.style.display = 'block';
+    topInsightEl.innerHTML = `
+      <div class="insight-box fade-up">
+        <span class="bulb">💡</span>
+        <div class="insight-text">
+          <div class="insight-lbl">Why this matters — ${mostUrgent.product}</div>
+          <p>${mostUrgent.plain_explain}</p>
+        </div>
+      </div>`;
+  } else {
+    topInsightEl.style.display = 'none';
+  }
+
+  const crits = d.items.filter(i => i.status === 'critical');
+  document.getElementById('invRec').innerHTML = recH('Inventory Recommendations', [
+    crits.length > 0
+      ? `Place restock orders for: <strong>${crits.map(i=>i.product).join(', ')}</strong>.`
+      : 'No critical stockouts detected.',
+    `ROP formula: d × L + safety stock. Adjust lead times if your supplier delivery speed changes.`,
+    warn > 0 ? `${warn} SKU(s) nearing their ROP — consider ordering before the next demand spike.` : 'Non-critical SKUs have adequate buffer stock.',
+    `Re-upload data weekly for updated velocity calculations.`,
+  ]);
+
+  document.getElementById('invEmpty').style.display = 'none';
+  document.getElementById('invData').style.display = 'block';
+}
+
+function renderInvList(items) {
+  document.getElementById('invList').innerHTML = items.map(i => `
+    <div class="item-row" onclick='openInvModal(${JSON.stringify(i)})'>
+      <div class="item-left">
+        <div class="item-name">${i.product}</div>
+        <div class="item-sku">${i.sku} · ${i.category}</div>
+        <div style="font-size:9px;color:var(--purple);margin-top:3px;line-height:1.4">${i.xai}</div>
+      </div>
+      <div class="item-right">
+        <div style="font-size:10px;color:var(--muted);text-align:right">Stock <strong style="color:${i.status==='critical'?'var(--red)':i.status==='warning'?'var(--amber)':'var(--txt)'}">${i.stock}</strong> / ROP ${i.rop}</div>
+        <span class="pill ${i.status==='critical'?'pr':i.status==='warning'?'pa':'pg'}"><span class="dot"></span>${i.status==='critical'?'Reorder now':i.status==='warning'?'Watch':'Healthy'}</span>
+      </div>
+    </div>`).join('');
+}
+
+function filterInv(f, btn) {
+  document.querySelectorAll('#page-inventory .tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderInvList(f === 'all' ? invCache : invCache.filter(i => i.status === f));
+}
+
+function openInvModal(i) {
+  document.getElementById('modalTitle').textContent = i.product;
+  document.getElementById('modalContent').innerHTML = `
+    <div class="modal-row"><span class="mk">SKU</span><span class="mv mono">${i.sku}</span></div>
+    <div class="modal-row"><span class="mk">Category</span><span class="mv">${i.category}</span></div>
+    <div class="modal-row"><span class="mk">Simulated stock</span><span class="mv" style="color:${i.status==='critical'?'var(--red)':'var(--txt)'}">${i.stock} units</span></div>
+    <div class="modal-row"><span class="mk">Reorder Point (ROP)</span><span class="mv">${i.rop} units</span></div>
+    <div class="modal-row"><span class="mk">Safety stock</span><span class="mv">${i.safety_stock} units</span></div>
+    <div class="modal-row"><span class="mk">Lead time</span><span class="mv">${i.lead} days</span></div>
+    <div class="modal-row"><span class="mk">Daily velocity</span><span class="mv">${i.velocity} u/day</span></div>
+    <div class="modal-row"><span class="mk">Suggested reorder qty</span><span class="mv">${i.reorder_qty} units</span></div>
+    <div class="modal-row"><span class="mk">Revenue contribution</span><span class="mv">RM ${Math.round(i.revenue).toLocaleString()}</span></div>
+    <div class="insight-box" style="margin-top:10px"><span class="bulb">💡</span><div class="insight-text"><div class="insight-lbl">Why this matters</div><p>${i.plain_explain || ''}</p></div></div>
+    <div class="xai-box" style="margin-top:8px"><div class="xai-lbl">XAI — How ROP was computed</div><p>${i.xai}</p></div>
+    <div class="modal-rec"><div class="modal-rec-title">Recommendation</div>
+    <p>${i.status==='critical'
+      ? `Order ${i.reorder_qty} units immediately. At ${i.velocity} u/day with ${i.lead}-day lead, stockout in ~${Math.round(i.stock/Math.max(i.velocity,0.1))} days.`
+      : i.status==='warning'
+      ? `Monitor closely. Consider ordering if demand increases or a promotion is planned.`
+      : `Stock healthy. ROP = ${i.rop} units — review again in 7 days.`}</p></div>`;
+  document.getElementById('modalBd').classList.add('open');
+}
+
+// ── PRICING ───────────────────────────────────────────────────────────────
+function renderPricing(d) {
+  const inc = d.items.filter(i => i.action === 'increase');
+  const dec = d.items.filter(i => i.action === 'decrease');
+  const avgLift = inc.length > 0 ? inc.reduce((s,i) => s+i.pct, 0)/inc.length : 0;
+
+  document.getElementById('ac-price-val').textContent  = '+' + avgLift.toFixed(0) + '%';
+  document.getElementById('ac-price-desc').textContent = `${inc.length} price increases, ${dec.length} decreases recommended.`;
+
+  document.getElementById('priceKpis').innerHTML = kpiH([
+    {l:'Raise price', v:inc.length, c:'var(--green)', s:'PED < 1 (inelastic)'},
+    {l:'Lower price', v:dec.length, c:'var(--red)',   s:'PED > 1 (elastic)'},
+    {l:'Hold price',  v:d.items.filter(i=>i.action==='hold').length, c:'var(--muted)', s:'Unit elastic'},
+    {l:'Est. weekly lift', v:'RM '+d.items.reduce((s,i)=>s+Math.max(0,i.weekly_delta),0).toFixed(0), c:'var(--blue)', s:'Combined uplift'},
+  ]);
+
+  document.getElementById('priceList').innerHTML = d.items.map(i => `
+    <div class="item-row" style="flex-wrap:wrap;gap:6px;cursor:default">
+      <div class="item-left">
+        <div class="item-name">${i.product}</div>
+        <div class="item-sku">${i.sku} · PED ${i.ped} · ${i.reason}</div>
+        <div class="insight-box" style="margin-top:6px"><span class="bulb">💡</span><div class="insight-text"><div class="insight-lbl">Why this matters</div><p>${i.plain_explain || ''}</p></div></div>
+        <div class="xai-box" style="margin-top:6px"><div class="xai-lbl">XAI</div><p>${i.xai}</p></div>
+      </div>
+      <div class="item-right" style="flex-direction:column;align-items:flex-end;gap:6px">
+        <div style="font-size:10px;color:var(--muted)">RM ${i.avg_price} → <strong>RM ${i.new_price}</strong></div>
+        <div style="font-size:9px;color:${i.weekly_delta>=0?'var(--green)':'var(--red)'}">Δ RM ${i.weekly_delta>=0?'+':''}${i.weekly_delta}/wk</div>
+        <span class="pill ${i.action==='increase'?'pg':i.action==='decrease'?'pr':'pa'}">${i.action==='increase'?'↑ +'+i.pct+'%':i.action==='decrease'?'↓ -'+i.pct+'%':'→ Hold'}</span>
+        <span class="profit-badge ${i.is_profitable?'yes':'no'}">${i.is_profitable
+          ? '<svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Profitable'
+          : '<svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg> Margin loss'}</span>
+      </div>
+    </div>`).join('');
+
+  document.getElementById('priceRec').innerHTML = recH('Pricing Recommendations', [
+    inc.length > 0
+      ? `Raise prices on inelastic products (${inc.slice(0,3).map(i=>i.product).join(', ')}). PED<1 means buyers are price-insensitive — margin rises with minimal volume loss.`
+      : 'No inelastic products found.',
+    dec.length > 0
+      ? `Lower prices on elastic products (${dec.slice(0,2).map(i=>i.product).join(', ')}). Volume surge will offset reduced margin.`
+      : 'No highly elastic products — pricing is near-optimal.',
+    'Test one SKU at a time. Monitor sales velocity for 2 weeks before applying to all.',
+    'Use the Promo Simulator tab to test specific discount % scenarios before going live.',
+  ]);
+
+  document.getElementById('priceEmpty').style.display = 'none';
+  document.getElementById('priceData').style.display = 'block';
+}
+
+// ── BUNDLES ───────────────────────────────────────────────────────────────
+function renderBundles(d) {
+  const isFallback = d.mode === 'cooccurrence_fallback';
+
+  document.getElementById('ac-bundle-val').textContent  = d.pairs.length + ' pairs';
+  document.getElementById('ac-bundle-desc').textContent = d.pairs.length > 0
+    ? `${isFallback ? 'Co-occurrence' : 'FP-Growth'}: ${d.pairs.length} high-affinity pairs found.`
+    : d.message || 'No pairs found.';
+
+  document.getElementById('bundleKpis').innerHTML = kpiH([
+    {l:'Bundle pairs',      v:d.pairs.length,    c:'var(--blue)',  s:'High-lift affinities'},
+    {l:'Multi-item orders', v:d.total_baskets,   c:'var(--txt)',   s:'Orders with 2+ SKUs'},
+    {l:'Total orders',      v:d.total_orders,    c:'var(--txt)',   s:'In dataset'},
+    {l:'Top lift score',    v:d.pairs.length>0?d.pairs[0].lift:'—', c:'var(--green)', s:'Strongest pair'},
+  ]);
+
+  const modeEl = document.getElementById('bundleMode');
+  if (isFallback && d.message) {
+    modeEl.style.display = '';
+    modeEl.innerHTML = `<div style="background:var(--al);border:1px solid var(--am);border-radius:7px;padding:8px 11px;font-size:10px;color:var(--amber)">${d.message}</div>`;
+  } else {
+    modeEl.style.display = 'none';
+  }
+
+  document.getElementById('bundleList').innerHTML = d.pairs.length > 0
+    ? d.pairs.map((p, idx) => `
+      <div class="bundle-card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+          <div class="bundle-prods">
+            <span class="bundle-prod">${p.product_a}</span>
+            <span class="bundle-plus">+</span>
+            <span class="bundle-prod">${p.product_b}</span>
+          </div>
+          <span style="font-size:9px;color:var(--muted)">${isFallback?'Co-occ':'FP-Growth'} #${idx+1}</span>
+        </div>
+        <div class="bundle-stats">
+          <span>Lift: <strong>${p.lift}</strong></span>
+          <span>Conf: <strong>${(p.confidence*100).toFixed(0)}%</strong></span>
+          <span>Supp: <strong>${(p.support*100).toFixed(1)}%</strong></span>
+          <span>Count: <strong>${p.count}×</strong></span>
+        </div>
+        <div class="insight-box" style="margin-top:6px"><span class="bulb">💡</span><div class="insight-text"><div class="insight-lbl">Why this matters</div><p>${p.plain_explain || ''}</p></div></div>
+        <div class="xai-box" style="margin-top:6px"><div class="xai-lbl">XAI + Cross-Price Elasticity</div><p>${p.xai}</p></div>
+        <div class="bundle-disc">
+          <div style="font-size:10px;color:var(--muted)">Bundle: RM ${p.price_a+p.price_b>0?(p.price_a+p.price_b).toFixed(2):'—'} → Ideal: <strong style="color:var(--green)">RM ${p.ideal_bundle_price}</strong></div>
+          <span class="disc-badge">-${p.suggested_discount}% off ${p.product_b}</span>
+          <span class="profit-badge ${p.is_profitable?'yes':'no'}">${p.is_profitable
+            ? '<svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Profitable'
+            : '<svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg> Margin loss'}</span>
+          ${isFallback ? '<span class="fallback-badge">Co-occ fallback</span>' : ''}
+        </div>
+      </div>`).join('')
+    : `<div class="empty-state" style="padding:20px"><div class="empty-desc">${d.message || 'No pairs found. Try data_bundling_test.csv for best results.'}</div></div>`;
+
+  document.getElementById('bundleRec').innerHTML = recH('Bundle Recommendations',
+    d.pairs.length > 0 ? [
+      `Create a bundle listing for the top pair: <strong>${d.pairs[0].product_a} + ${d.pairs[0].product_b}</strong> (Lift ${d.pairs[0].lift}).`,
+      `Apply a -${d.pairs[0].suggested_discount}% discount on the secondary item (${d.pairs[0].product_b}) when bought together. Margin is offset by higher AOV.`,
+      `Cross-PED = ${d.pairs[0].cross_ped}: ${d.pairs[0].cross_ped<0?'negative = complements — bundling increases demand for both.':'positive = substitutes — separate pricing may be better.'}`,
+      `Upload data_bundling_test.csv to see full FP-Growth results with real basket grouping.`,
+    ] : [`Upload data where orders have multiple different SKUs per OrderID for basket analysis.`]
+  );
+
+  document.getElementById('bundleEmpty').style.display = 'none';
+  document.getElementById('bundleData').style.display = 'block';
+}
+
+// ── FORECAST ─────────────────────────────────────────────────────────────
+function renderForecast(d) {
+  const s = d.summary;
+  document.getElementById('ac-fc-val').textContent  = (s.forecast_change>=0?'+':'') + s.forecast_change + '%';
+  document.getElementById('ac-fc-desc').textContent = `${s.model}. Trend: ${s.trend}. MAPE: ${s.mape}%.`;
+
+  document.getElementById('forecastKpis').innerHTML = kpiH([
+    {l:'Model',          v:s.model.split('(')[0], c:'var(--txt)', s:`${s.n_obs} obs`},
+    {l:'Avg weekly',     v:s.avg_weekly,           c:'var(--txt)', s:'units/week'},
+    {l:'Forecast change',v:(s.forecast_change>=0?'+':'')+s.forecast_change+'%', c:s.forecast_change>=0?'var(--green)':'var(--red)', s:'Next 4 weeks'},
+    {l:'MAPE',           v:s.mape+'%',             c:'var(--blue)', s:'Forecast accuracy'},
+  ]);
+
+  document.getElementById('forecastInsight').innerHTML = s.plain_explain
+    ? `<div class="insight-box"><span class="bulb">💡</span><div class="insight-text"><div class="insight-lbl">Why this matters</div><p>${s.plain_explain}</p></div></div>`
+    : '';
+
+  if (charts.fc) charts.fc.destroy();
+  charts.fc = new Chart(document.getElementById('forecastChart'), {
+    type: 'line',
+    data: {
+      labels: d.series.map(p => p.label),
+      datasets: [
+        {label:'Historical', data:d.series.map(p=>p.actual),   borderColor:'#2563eb', backgroundColor:'rgba(37,99,235,0.07)', fill:true, tension:0.38, pointRadius:3, pointBackgroundColor:'#2563eb', spanGaps:false},
+        {label:'Forecast',   data:d.series.map(p=>p.forecast), borderColor:'#15803d', borderDash:[6,3], fill:false, tension:0.38, pointRadius:3, pointBackgroundColor:'#15803d', spanGaps:false},
+        {label:'Upper CI',   data:d.series.map(p=>p.upper),    borderColor:'rgba(21,128,61,0.2)', borderDash:[2,4], fill:false, pointRadius:0, spanGaps:false},
+        {label:'Lower CI',   data:d.series.map(p=>p.lower),    borderColor:'rgba(21,128,61,0.2)', borderDash:[2,4], fill:'-1', backgroundColor:'rgba(21,128,61,0.05)', pointRadius:0, spanGaps:false},
+      ],
+    },
+    options: {
+      responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{display:true, position:'bottom', labels:{font:{size:10}, boxWidth:10, padding:10}}},
+      scales:{
+        x:{grid:{color:'rgba(0,0,0,0.04)'}, ticks:{font:{size:10}}},
+        y:{grid:{color:'rgba(0,0,0,0.04)'}, ticks:{font:{size:10}}},
+      },
+    },
+  });
+
+  document.getElementById('forecastRec').innerHTML = recH('Forecast Recommendations', [
+    s.trend === 'Upward'
+      ? `Demand trending UP (+${s.forecast_change}%). Increase safety stock ~20% on top-selling SKUs before the projected peak.`
+      : `Demand trending DOWN (${s.forecast_change}%). Reduce new purchase orders and activate liquidation pricing on slow-moving inventory.`,
+    `MAPE = ${s.mape}%. ${s.mape<10?'✓ Model is reliable.':'Consider uploading more historical data for a better fit.'}`,
+    `Cross-reference forecast peak weeks with your Inventory tab — if critical SKUs align with an upward forecast, prioritise those reorder actions.`,
+    `Re-upload data weekly to keep the forecast model calibrated on fresh observations.`,
+  ]);
+
+  document.getElementById('forecastEmpty').style.display = 'none';
+  document.getElementById('forecastData').style.display = 'block';
+}
+
+// ── DASHBOARD CHARTS ─────────────────────────────────────────────────────
+function renderDashCharts(sales, skus) {
+  if (charts.sales) charts.sales.destroy();
+  charts.sales = new Chart(document.getElementById('dashSales'), {
+    type:'line',
+    data:{labels:sales.data.map(d=>d.week), datasets:[{label:'Units',data:sales.data.map(d=>d.units),borderColor:'#2563eb',backgroundColor:'rgba(37,99,235,0.07)',fill:true,tension:0.4,pointRadius:3,pointBackgroundColor:'#2563eb',pointBorderColor:'#fff',pointBorderWidth:2}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{color:'rgba(0,0,0,0.04)'},ticks:{font:{size:10}}},y:{grid:{color:'rgba(0,0,0,0.04)'},ticks:{font:{size:10}}}}},
+  });
+  if (charts.sku) charts.sku.destroy();
+  charts.sku = new Chart(document.getElementById('dashSku'), {
+    type:'bar',
+    data:{labels:skus.data.map(d=>d.name),datasets:[{label:'Revenue',data:skus.data.map(d=>d.revenue),backgroundColor:['#2563eb','#0f766e','#15803d','#b45309','#7c3aed','#be185d'],borderRadius:4,borderSkipped:false}]},
+    options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{color:'rgba(0,0,0,0.04)'},ticks:{font:{size:10},callback:v=>'RM '+(v/1000).toFixed(1)+'k'}},y:{grid:{display:false},ticks:{font:{size:10}}}}},
+  });
+}
+
+// ── EDA ──────────────────────────────────────────────────────────────────
+function renderEDA(metrics, cat, reg, sales, inv) {
+  document.getElementById('edaStats').innerHTML = `
+    <div class="stat-card"><div class="stat-val">RM ${Math.round(metrics.revenue).toLocaleString()}</div><div class="stat-lbl">Total Revenue</div></div>
+    <div class="stat-card"><div class="stat-val">${metrics.orders}</div><div class="stat-lbl">Total Orders</div></div>
+    <div class="stat-card"><div class="stat-val">RM ${metrics.aov.toFixed(2)}</div><div class="stat-lbl">Avg Order Value</div></div>
+    <div class="stat-card"><div class="stat-val">${metrics.days_of_data}</div><div class="stat-lbl">Days of Data</div></div>`;
+
+  if (charts.cat) charts.cat.destroy();
+  charts.cat = new Chart(document.getElementById('catChart'), {
+    type:'doughnut',
+    data:{labels:cat.data.map(c=>c.category),datasets:[{data:cat.data.map(c=>c.revenue),backgroundColor:['#2563eb','#0f766e','#b45309','#7c3aed','#be185d'],borderWidth:2,borderColor:'#fff',hoverOffset:5}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{font:{size:10},padding:9}}}},
+  });
+
+  if (charts.reg) charts.reg.destroy();
+  charts.reg = new Chart(document.getElementById('regChart'), {
+    type:'bar',
+    data:{labels:reg.data.map(r=>r.region),datasets:[{label:'Revenue (RM)',data:reg.data.map(r=>r.revenue),backgroundColor:'rgba(37,99,235,0.75)',borderRadius:3},{label:'Orders',data:reg.data.map(r=>r.orders),backgroundColor:'rgba(21,128,61,0.65)',borderRadius:3}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:true,position:'bottom',labels:{font:{size:10},boxWidth:10,padding:8}}},scales:{x:{grid:{display:false},ticks:{font:{size:10}}},y:{grid:{color:'rgba(0,0,0,0.04)'},ticks:{font:{size:10}}}}},
+  });
+
+  if (charts.daily) charts.daily.destroy();
+  charts.daily = new Chart(document.getElementById('dailyChart'), {
+    type:'bar',
+    data:{labels:sales.data.map(d=>d.week),datasets:[{label:'Units sold',data:sales.data.map(d=>d.units),backgroundColor:'rgba(37,99,235,0.7)',borderRadius:3}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{font:{size:10}}},y:{grid:{color:'rgba(0,0,0,0.04)'},ticks:{font:{size:10}}}}},
+  });
+
+  const topSkus = [...inv.items].sort((a,b) => b.total_sold-a.total_sold).slice(0,8);
+  if (charts.units) charts.units.destroy();
+  charts.units = new Chart(document.getElementById('unitsChart'), {
+    type:'bar',
+    data:{labels:topSkus.map(s=>s.product.length>16?s.product.slice(0,14)+'…':s.product),datasets:[{label:'Units',data:topSkus.map(s=>s.total_sold),backgroundColor:['#2563eb','#0f766e','#15803d','#b45309','#7c3aed','#be185d','#0369a1','#d97706'],borderRadius:3,borderSkipped:false}]},
+    options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{color:'rgba(0,0,0,0.04)'},ticks:{font:{size:10}}},y:{grid:{display:false},ticks:{font:{size:10}}}}},
+  });
+
+  // Rating distribution
+  const rBuckets = {'3.0–3.9':0,'4.0–4.4':0,'4.5–4.7':0,'4.8–4.9':0,'5.0':0};
+  inv.items.forEach(i => {
+    const r = i.avg_rating || 4.5;
+    if (r < 4.0) rBuckets['3.0–3.9']++;
+    else if (r < 4.5) rBuckets['4.0–4.4']++;
+    else if (r < 4.8) rBuckets['4.5–4.7']++;
+    else if (r < 5.0) rBuckets['4.8–4.9']++;
+    else rBuckets['5.0']++;
+  });
+  if (charts.rating) charts.rating.destroy();
+  charts.rating = new Chart(document.getElementById('ratingChart'), {
+    type:'bar',
+    data:{labels:Object.keys(rBuckets),datasets:[{label:'SKUs',data:Object.values(rBuckets),backgroundColor:'#15803d',borderRadius:3}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{font:{size:10}}},y:{grid:{color:'rgba(0,0,0,0.04)'},ticks:{font:{size:10},stepSize:1}}}},
+  });
+
+  if (charts.ret) charts.ret.destroy();
+  charts.ret = new Chart(document.getElementById('returnChart'), {
+    type:'bar',
+    data:{labels:cat.data.map(c=>c.category),datasets:[{label:'Revenue (RM)',data:cat.data.map(c=>c.revenue),backgroundColor:'rgba(37,99,235,0.7)',borderRadius:3},{label:'Est. returns cost',data:cat.data.map(c=>Math.round(c.revenue*0.03)),backgroundColor:'rgba(185,28,28,0.6)',borderRadius:3}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:true,position:'bottom',labels:{font:{size:10},boxWidth:10,padding:8}}},scales:{x:{grid:{display:false},ticks:{font:{size:10}}},y:{grid:{color:'rgba(0,0,0,0.04)'},ticks:{font:{size:10},callback:v=>'RM '+(v/1000).toFixed(0)+'k'}}}},
+  });
+
+  const sorted = [...inv.items].sort((a,b) => b.revenue - a.revenue);
+  document.getElementById('edaBody').innerHTML = sorted.map(i => `
+    <tr>
+      <td class="mono">${i.sku}</td><td>${i.product}</td><td>${i.category}</td>
+      <td>${i.total_sold}</td><td>RM ${Math.round(i.revenue).toLocaleString()}</td>
+      <td>${i.velocity} u/day</td><td>${i.avg_rating}</td><td>${i.return_rate}%</td>
+    </tr>`).join('');
+
+  document.getElementById('edaEmpty').style.display = 'none';
+  document.getElementById('edaData').style.display = 'flex';
+}
+
+// ── PROMO SIMULATOR ───────────────────────────────────────────────────────
+function populatePromoSku(skus) {
+  const sel = document.getElementById('promoSku');
+  sel.innerHTML = '<option value="">— Choose a product —</option>' +
+    skus.map(s => `<option value="${s.sku}">${s.sku} — ${s.product} (${s.category})</option>`).join('');
+}
+
+function renderPromoPage() {
+  if (promoSkuCache.length > 0) {
+    document.getElementById('promoEmpty').style.display = 'none';
+    document.getElementById('promoSimulator').style.display = 'block';
+  }
+}
+
+async function runPromoSim() {
+  const skuVal = document.getElementById('promoSku').value;
+  const disc   = parseFloat(document.getElementById('promoDisc').value) || 0;
+  const errEl  = document.getElementById('simErr');
+  const resEl  = document.getElementById('promoResults');
+
+  errEl.style.display = 'none';
+  resEl.style.display  = 'none';
+
+  if (!skuVal) {
+    errEl.textContent = 'Please select a product from the dropdown.';
+    errEl.style.display = 'block'; return;
+  }
+  if (disc <= 0 || disc > 80) {
+    errEl.textContent = 'Discount must be between 1% and 80%.';
+    errEl.style.display = 'block'; return;
+  }
+
+  const btn = document.getElementById('promoBtn');
+  btn.disabled = true; btn.textContent = 'Simulating…';
+
+  try {
+    const r = await fetch('/api/simulate/promo', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ sku: skuVal, discount_pct: disc }),
+    });
+    const d = await r.json();
+
+    if (!r.ok) {
+      errEl.textContent = d.detail || 'Simulation failed.';
+      errEl.style.display = 'block';
+      return;
+    }
+
+    // Render result grid (Profitable status now shown as a dedicated bold badge, not buried in the grid)
+    document.getElementById('promoGrid').innerHTML = [
+      {l:'Original price',     v:'RM '+d.original_price,      c:'var(--txt)'},
+      {l:'Promo price',        v:'RM '+d.discounted_price,     c:'var(--amber)'},
+      {l:'Volume change',      v:'+'+d.volume_change_pct+'%', c:'var(--green)'},
+      {l:'Original velocity',  v:d.original_velocity+' u/day', c:'var(--txt)'},
+      {l:'Projected velocity', v:d.projected_velocity+' u/day',c:'var(--blue)'},
+      {l:'Weekly rev now',     v:'RM '+d.current_weekly_revenue,  c:'var(--txt)'},
+      {l:'Weekly rev projected',v:'RM '+d.projected_weekly_revenue,c:d.revenue_delta>=0?'var(--green)':'var(--red)'},
+      {l:'Revenue delta',      v:'RM '+(d.revenue_delta>=0?'+':'')+d.revenue_delta, c:d.revenue_delta>=0?'var(--green)':'var(--red)'},
+      {l:'Profit delta',       v:'RM '+(d.profit_delta>=0?'+':'')+d.profit_delta,   c:d.profit_delta>=0?'var(--green)':'var(--red)'},
+    ].map(m => `<div class="sim-metric"><div class="sim-metric-lbl">${m.l}</div><div class="sim-metric-val" style="color:${m.c}">${m.v}</div></div>`).join('');
+
+    // ── Bold "Profitable? Yes/No" badge — explicit visual green/red light ──
+    const badgeEl = document.getElementById('promoProfitBadge');
+    badgeEl.className = 'profit-badge ' + (d.is_profitable ? 'yes' : 'no');
+    badgeEl.innerHTML = d.is_profitable
+      ? '<svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Profitable recommendation'
+      : '<svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg> Margin loss warning';
+
+    // Recommendation box
+    const recEl = document.getElementById('promoRec');
+    recEl.textContent = d.recommendation;
+    recEl.className = 'sim-rec ' + (d.is_profitable ? 'good' : 'bad');
+
+    // XAI
+    document.getElementById('promoXaiText').textContent =
+      `PED = ${d.ped} for '${d.category}'. A ${d.discount_pct}% price cut → ${d.volume_change_pct}% demand increase (PED × discount%). ` +
+      `Original weekly revenue: RM ${d.current_weekly_revenue} (${d.original_velocity} u/day × 7 days × RM ${d.original_price}). ` +
+      `Projected: RM ${d.projected_weekly_revenue} (${d.projected_velocity} u/day × 7 × RM ${d.discounted_price}). ` +
+      `Profit uses 40% gross margin baseline.`;
+
+    resEl.style.display = 'block';
+
+  } catch (e) {
+    errEl.textContent = 'Server error: ' + e.message;
+    errEl.style.display = 'block';
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '<svg viewBox="0 0 24 24" style="width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2"><polygon points="5 3 19 12 5 21 5 3"/></svg> Run simulation';
+  }
+}
+
+// ── MODAL & MISC ──────────────────────────────────────────────────────────
+function closeModal() { document.getElementById('modalBd').classList.remove('open'); }
+function openReqModal() { document.getElementById('reqBd').classList.add('open'); }
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    closeModal();
+    document.getElementById('reqBd').classList.remove('open');
+  }
+});
+
+// ── HELPERS ───────────────────────────────────────────────────────────────
+function kpiH(items) {
+  return items.map(k =>
+    `<div class="kpi"><div class="kpi-lbl">${k.l}</div><div class="kpi-val" style="color:${k.c}">${k.v}</div>${k.s?`<div class="kpi-sub">${k.s}</div>`:''}</div>`
+  ).join('');
+}
+function recH(title, items) {
+  return `<div class="rec-section"><div class="rec-title"><svg viewBox="0 0 24 24"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>${title}</div>${
+    items.map((r,i) => `<div class="rec-item"><span class="rec-num">${i+1}</span><span>${r}</span></div>`).join('')
+  }</div>`;
+}
+
+// ── INIT ─────────────────────────────────────────────────────────────────
+(async () => {
+  const s = await api('/status');
+  if (s.loaded) await onLoaded({ filename: s.filename, rows: s.rows, skus: '—', date_range: '' });
+})();
+</script>
+</body>
+</html>

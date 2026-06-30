@@ -1,0 +1,101 @@
+OrderID,Date,SKU,ProductName,Category,Quantity,UnitPrice,Region,Rating,Returns
+ORD-F001,2025-01-02,SKU-F01,Oversized Cotton Tee,Tops,3,49.00,Kuala Lumpur,4.5,0
+ORD-F002,2025-01-02,SKU-F02,High Waist Jeans,Bottoms,1,129.00,Selangor,4.7,0
+ORD-F003,2025-01-03,SKU-F01,Oversized Cotton Tee,Tops,2,49.00,Penang,4.4,0
+ORD-F004,2025-01-03,SKU-F03,Floral Maxi Dress,Dresses,1,189.00,Johor Bahru,4.8,0
+ORD-F005,2025-01-04,SKU-F04,Linen Blazer Beige,Outerwear,1,299.00,Kuala Lumpur,4.6,0
+ORD-F006,2025-01-04,SKU-F01,Oversized Cotton Tee,Tops,4,49.00,Selangor,4.5,1
+ORD-F007,2025-01-05,SKU-F05,Slip-On Canvas Sneakers,Footwear,2,89.00,Kuala Lumpur,4.3,0
+ORD-F008,2025-01-05,SKU-F02,High Waist Jeans,Bottoms,1,129.00,Penang,4.6,0
+ORD-F009,2025-01-06,SKU-F06,Ribbed Knit Cardigan,Tops,1,159.00,Selangor,4.7,0
+ORD-F010,2025-01-06,SKU-F03,Floral Maxi Dress,Dresses,2,189.00,Kuala Lumpur,4.9,0
+ORD-F011,2025-01-07,SKU-F01,Oversized Cotton Tee,Tops,3,49.00,Johor Bahru,4.4,0
+ORD-F012,2025-01-07,SKU-F07,Wide Leg Trousers,Bottoms,1,99.00,Kuala Lumpur,4.5,0
+ORD-F013,2025-01-08,SKU-F04,Linen Blazer Beige,Outerwear,1,299.00,Selangor,4.7,0
+ORD-F014,2025-01-08,SKU-F05,Slip-On Canvas Sneakers,Footwear,3,89.00,Penang,4.2,0
+ORD-F015,2025-01-09,SKU-F08,Crossbody Mini Bag,Accessories,2,79.00,Kuala Lumpur,4.6,0
+ORD-F016,2025-01-09,SKU-F01,Oversized Cotton Tee,Tops,2,49.00,Selangor,4.5,0
+ORD-F017,2025-01-10,SKU-F03,Floral Maxi Dress,Dresses,1,189.00,Johor Bahru,4.8,0
+ORD-F018,2025-01-10,SKU-F02,High Waist Jeans,Bottoms,2,129.00,Kuala Lumpur,4.7,0
+ORD-F019,2025-01-11,SKU-F06,Ribbed Knit Cardigan,Tops,1,159.00,Penang,4.6,0
+ORD-F020,2025-01-11,SKU-F08,Crossbody Mini Bag,Accessories,1,79.00,Selangor,4.5,0
+ORD-F021,2025-01-12,SKU-F05,Slip-On Canvas Sneakers,Footwear,2,89.00,Kuala Lumpur,4.3,0
+ORD-F022,2025-01-12,SKU-F01,Oversized Cotton Tee,Tops,3,49.00,Johor Bahru,4.4,0
+ORD-F023,2025-01-13,SKU-F07,Wide Leg Trousers,Bottoms,2,99.00,Selangor,4.5,0
+ORD-F024,2025-01-13,SKU-F04,Linen Blazer Beige,Outerwear,1,299.00,Penang,4.8,0
+ORD-F025,2025-01-14,SKU-F03,Floral Maxi Dress,Dresses,1,189.00,Kuala Lumpur,4.7,0
+ORD-F026,2025-01-14,SKU-F08,Crossbody Mini Bag,Accessories,3,79.00,Selangor,4.6,0
+ORD-F027,2025-01-15,SKU-F01,Oversized Cotton Tee,Tops,4,49.00,Johor Bahru,4.5,0
+ORD-F028,2025-01-15,SKU-F02,High Waist Jeans,Bottoms,1,129.00,Kuala Lumpur,4.7,1
+ORD-F029,2025-01-16,SKU-F05,Slip-On Canvas Sneakers,Footwear,1,89.00,Penang,4.2,0
+ORD-F030,2025-01-16,SKU-F06,Ribbed Knit Cardigan,Tops,2,159.00,Selangor,4.6,0
+ORD-F031,2025-01-17,SKU-F03,Floral Maxi Dress,Dresses,2,189.00,Kuala Lumpur,4.9,0
+ORD-F032,2025-01-17,SKU-F07,Wide Leg Trousers,Bottoms,1,99.00,Johor Bahru,4.4,0
+ORD-F033,2025-01-18,SKU-F08,Crossbody Mini Bag,Accessories,2,79.00,Selangor,4.5,0
+ORD-F034,2025-01-18,SKU-F04,Linen Blazer Beige,Outerwear,1,299.00,Kuala Lumpur,4.7,0
+ORD-F035,2025-01-19,SKU-F01,Oversized Cotton Tee,Tops,3,49.00,Penang,4.4,0
+ORD-F036,2025-01-20,SKU-F02,High Waist Jeans,Bottoms,2,129.00,Selangor,4.6,0
+ORD-F037,2025-01-20,SKU-F05,Slip-On Canvas Sneakers,Footwear,2,89.00,Kuala Lumpur,4.3,0
+ORD-F038,2025-01-21,SKU-F03,Floral Maxi Dress,Dresses,1,189.00,Johor Bahru,4.8,0
+ORD-F039,2025-01-21,SKU-F06,Ribbed Knit Cardigan,Tops,1,159.00,Kuala Lumpur,4.6,0
+ORD-F040,2025-01-22,SKU-F01,Oversized Cotton Tee,Tops,2,49.00,Selangor,4.5,0
+ORD-F041,2025-01-22,SKU-F08,Crossbody Mini Bag,Accessories,2,79.00,Penang,4.6,0
+ORD-F042,2025-01-23,SKU-F07,Wide Leg Trousers,Bottoms,1,99.00,Kuala Lumpur,4.4,0
+ORD-F043,2025-01-23,SKU-F04,Linen Blazer Beige,Outerwear,1,299.00,Selangor,4.7,0
+ORD-F044,2025-01-24,SKU-F01,Oversized Cotton Tee,Tops,4,49.00,Johor Bahru,4.3,0
+ORD-F045,2025-01-24,SKU-F02,High Waist Jeans,Bottoms,1,129.00,Kuala Lumpur,4.7,0
+ORD-F046,2025-01-25,SKU-F03,Floral Maxi Dress,Dresses,2,189.00,Penang,4.8,0
+ORD-F047,2025-01-25,SKU-F05,Slip-On Canvas Sneakers,Footwear,1,89.00,Selangor,4.2,0
+ORD-F048,2025-01-26,SKU-F06,Ribbed Knit Cardigan,Tops,2,159.00,Kuala Lumpur,4.5,0
+ORD-F049,2025-01-26,SKU-F08,Crossbody Mini Bag,Accessories,1,79.00,Johor Bahru,4.6,0
+ORD-F050,2025-01-27,SKU-F01,Oversized Cotton Tee,Tops,3,49.00,Selangor,4.4,1
+ORD-F051,2025-01-27,SKU-F07,Wide Leg Trousers,Bottoms,2,99.00,Penang,4.5,0
+ORD-F052,2025-01-28,SKU-F04,Linen Blazer Beige,Outerwear,1,299.00,Kuala Lumpur,4.8,0
+ORD-F053,2025-01-28,SKU-F02,High Waist Jeans,Bottoms,1,129.00,Selangor,4.6,0
+ORD-F054,2025-01-29,SKU-F03,Floral Maxi Dress,Dresses,1,189.00,Johor Bahru,4.7,0
+ORD-F055,2025-01-29,SKU-F01,Oversized Cotton Tee,Tops,2,49.00,Kuala Lumpur,4.5,0
+ORD-F056,2025-01-30,SKU-F05,Slip-On Canvas Sneakers,Footwear,3,89.00,Penang,4.3,0
+ORD-F057,2025-01-31,SKU-F08,Crossbody Mini Bag,Accessories,2,79.00,Selangor,4.6,0
+ORD-F058,2025-02-01,SKU-F01,Oversized Cotton Tee,Tops,4,49.00,Kuala Lumpur,4.4,0
+ORD-F059,2025-02-01,SKU-F06,Ribbed Knit Cardigan,Tops,1,159.00,Johor Bahru,4.7,0
+ORD-F060,2025-02-02,SKU-F03,Floral Maxi Dress,Dresses,2,189.00,Selangor,4.9,0
+ORD-F061,2025-02-02,SKU-F02,High Waist Jeans,Bottoms,1,129.00,Penang,4.6,0
+ORD-F062,2025-02-03,SKU-F04,Linen Blazer Beige,Outerwear,1,299.00,Kuala Lumpur,4.7,0
+ORD-F063,2025-02-03,SKU-F07,Wide Leg Trousers,Bottoms,2,99.00,Selangor,4.4,0
+ORD-F064,2025-02-04,SKU-F01,Oversized Cotton Tee,Tops,3,49.00,Johor Bahru,4.5,0
+ORD-F065,2025-02-04,SKU-F08,Crossbody Mini Bag,Accessories,2,79.00,Kuala Lumpur,4.5,0
+ORD-F066,2025-02-05,SKU-F05,Slip-On Canvas Sneakers,Footwear,2,89.00,Penang,4.2,0
+ORD-F067,2025-02-05,SKU-F03,Floral Maxi Dress,Dresses,1,189.00,Selangor,4.8,0
+ORD-F068,2025-02-06,SKU-F01,Oversized Cotton Tee,Tops,2,49.00,Kuala Lumpur,4.4,0
+ORD-F069,2025-02-06,SKU-F02,High Waist Jeans,Bottoms,2,129.00,Johor Bahru,4.7,0
+ORD-F070,2025-02-07,SKU-F06,Ribbed Knit Cardigan,Tops,1,159.00,Selangor,4.6,0
+ORD-F071,2025-02-07,SKU-F04,Linen Blazer Beige,Outerwear,1,299.00,Penang,4.8,0
+ORD-F072,2025-02-08,SKU-F01,Oversized Cotton Tee,Tops,5,49.00,Kuala Lumpur,4.5,0
+ORD-F073,2025-02-08,SKU-F08,Crossbody Mini Bag,Accessories,3,79.00,Selangor,4.6,0
+ORD-F074,2025-02-09,SKU-F03,Floral Maxi Dress,Dresses,1,189.00,Johor Bahru,4.9,0
+ORD-F075,2025-02-09,SKU-F07,Wide Leg Trousers,Bottoms,2,99.00,Kuala Lumpur,4.4,0
+ORD-F076,2025-02-10,SKU-F05,Slip-On Canvas Sneakers,Footwear,1,89.00,Penang,4.3,0
+ORD-F077,2025-02-10,SKU-F01,Oversized Cotton Tee,Tops,3,49.00,Selangor,4.4,0
+ORD-F078,2025-02-11,SKU-F02,High Waist Jeans,Bottoms,1,129.00,Kuala Lumpur,4.7,0
+ORD-F079,2025-02-11,SKU-F06,Ribbed Knit Cardigan,Tops,2,159.00,Johor Bahru,4.6,0
+ORD-F080,2025-02-12,SKU-F04,Linen Blazer Beige,Outerwear,1,299.00,Selangor,4.7,1
+ORD-F081,2025-02-12,SKU-F03,Floral Maxi Dress,Dresses,2,189.00,Penang,4.8,0
+ORD-F082,2025-02-13,SKU-F01,Oversized Cotton Tee,Tops,4,49.00,Kuala Lumpur,4.5,0
+ORD-F083,2025-02-13,SKU-F08,Crossbody Mini Bag,Accessories,1,79.00,Selangor,4.6,0
+ORD-F084,2025-02-14,SKU-F05,Slip-On Canvas Sneakers,Footwear,3,89.00,Johor Bahru,4.2,0
+ORD-F085,2025-02-14,SKU-F02,High Waist Jeans,Bottoms,2,129.00,Kuala Lumpur,4.6,0
+ORD-F086,2025-02-15,SKU-F07,Wide Leg Trousers,Bottoms,1,99.00,Penang,4.4,0
+ORD-F087,2025-02-15,SKU-F01,Oversized Cotton Tee,Tops,3,49.00,Selangor,4.5,0
+ORD-F088,2025-02-16,SKU-F03,Floral Maxi Dress,Dresses,1,189.00,Kuala Lumpur,4.8,0
+ORD-F089,2025-02-16,SKU-F06,Ribbed Knit Cardigan,Tops,1,159.00,Johor Bahru,4.7,0
+ORD-F090,2025-02-17,SKU-F04,Linen Blazer Beige,Outerwear,1,299.00,Selangor,4.9,0
+ORD-F091,2025-02-17,SKU-F08,Crossbody Mini Bag,Accessories,2,79.00,Penang,4.5,0
+ORD-F092,2025-02-18,SKU-F01,Oversized Cotton Tee,Tops,2,49.00,Kuala Lumpur,4.4,0
+ORD-F093,2025-02-18,SKU-F02,High Waist Jeans,Bottoms,1,129.00,Selangor,4.7,0
+ORD-F094,2025-02-19,SKU-F05,Slip-On Canvas Sneakers,Footwear,2,89.00,Johor Bahru,4.3,0
+ORD-F095,2025-02-19,SKU-F03,Floral Maxi Dress,Dresses,2,189.00,Kuala Lumpur,4.8,0
+ORD-F096,2025-02-20,SKU-F07,Wide Leg Trousers,Bottoms,2,99.00,Penang,4.4,0
+ORD-F097,2025-02-20,SKU-F01,Oversized Cotton Tee,Tops,4,49.00,Selangor,4.5,0
+ORD-F098,2025-02-21,SKU-F06,Ribbed Knit Cardigan,Tops,1,159.00,Kuala Lumpur,4.6,0
+ORD-F099,2025-02-21,SKU-F04,Linen Blazer Beige,Outerwear,1,299.00,Johor Bahru,4.8,0
+ORD-F100,2025-02-22,SKU-F08,Crossbody Mini Bag,Accessories,3,79.00,Selangor,4.5,0

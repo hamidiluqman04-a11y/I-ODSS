@@ -1,0 +1,101 @@
+OrderID,Date,SKU,ProductName,Category,Quantity,UnitPrice,Region,Rating,Returns
+ORD-B001,2025-01-01,SKU-B01,Vitamin C Serum 30ml,Skincare,2,88.00,Kuala Lumpur,4.8,0
+ORD-B002,2025-01-01,SKU-B02,Hyaluronic Moisturiser,Skincare,1,120.00,Selangor,4.7,0
+ORD-B003,2025-01-02,SKU-B03,SPF50 Sunscreen Gel,Skincare,3,65.00,Penang,4.9,0
+ORD-B004,2025-01-02,SKU-B01,Vitamin C Serum 30ml,Skincare,1,88.00,Johor Bahru,4.8,0
+ORD-B005,2025-01-03,SKU-B04,Collagen Face Mask 5pk,Skincare,2,45.00,Kuala Lumpur,4.5,0
+ORD-B006,2025-01-03,SKU-B05,Retinol Night Cream,Skincare,1,155.00,Selangor,4.6,0
+ORD-B007,2025-01-04,SKU-B06,Micellar Cleansing Water,Haircare,2,38.00,Kuala Lumpur,4.4,0
+ORD-B008,2025-01-04,SKU-B02,Hyaluronic Moisturiser,Skincare,1,120.00,Penang,4.7,0
+ORD-B009,2025-01-05,SKU-B03,SPF50 Sunscreen Gel,Skincare,2,65.00,Selangor,4.9,0
+ORD-B010,2025-01-05,SKU-B07,Argan Oil Hair Serum,Haircare,1,75.00,Kuala Lumpur,4.6,0
+ORD-B011,2025-01-06,SKU-B01,Vitamin C Serum 30ml,Skincare,2,88.00,Johor Bahru,4.8,0
+ORD-B012,2025-01-06,SKU-B08,Lip Plumping Gloss,Makeup,3,28.00,Kuala Lumpur,4.3,0
+ORD-B013,2025-01-07,SKU-B04,Collagen Face Mask 5pk,Skincare,2,45.00,Selangor,4.5,0
+ORD-B014,2025-01-07,SKU-B05,Retinol Night Cream,Skincare,1,155.00,Penang,4.7,0
+ORD-B015,2025-01-08,SKU-B03,SPF50 Sunscreen Gel,Skincare,3,65.00,Kuala Lumpur,4.9,0
+ORD-B016,2025-01-08,SKU-B06,Micellar Cleansing Water,Haircare,1,38.00,Selangor,4.4,0
+ORD-B017,2025-01-09,SKU-B01,Vitamin C Serum 30ml,Skincare,1,88.00,Johor Bahru,4.8,0
+ORD-B018,2025-01-09,SKU-B07,Argan Oil Hair Serum,Haircare,2,75.00,Kuala Lumpur,4.6,0
+ORD-B019,2025-01-10,SKU-B02,Hyaluronic Moisturiser,Skincare,2,120.00,Penang,4.7,0
+ORD-B020,2025-01-10,SKU-B08,Lip Plumping Gloss,Makeup,2,28.00,Selangor,4.3,0
+ORD-B021,2025-01-11,SKU-B03,SPF50 Sunscreen Gel,Skincare,4,65.00,Kuala Lumpur,4.9,0
+ORD-B022,2025-01-11,SKU-B01,Vitamin C Serum 30ml,Skincare,1,88.00,Johor Bahru,4.8,0
+ORD-B023,2025-01-12,SKU-B05,Retinol Night Cream,Skincare,1,155.00,Selangor,4.7,0
+ORD-B024,2025-01-12,SKU-B04,Collagen Face Mask 5pk,Skincare,3,45.00,Penang,4.5,0
+ORD-B025,2025-01-13,SKU-B06,Micellar Cleansing Water,Haircare,2,38.00,Kuala Lumpur,4.4,0
+ORD-B026,2025-01-13,SKU-B03,SPF50 Sunscreen Gel,Skincare,2,65.00,Selangor,4.9,0
+ORD-B027,2025-01-14,SKU-B01,Vitamin C Serum 30ml,Skincare,2,88.00,Johor Bahru,4.8,1
+ORD-B028,2025-01-14,SKU-B07,Argan Oil Hair Serum,Haircare,1,75.00,Kuala Lumpur,4.6,0
+ORD-B029,2025-01-15,SKU-B02,Hyaluronic Moisturiser,Skincare,1,120.00,Penang,4.7,0
+ORD-B030,2025-01-15,SKU-B08,Lip Plumping Gloss,Makeup,4,28.00,Selangor,4.2,0
+ORD-B031,2025-01-16,SKU-B03,SPF50 Sunscreen Gel,Skincare,3,65.00,Kuala Lumpur,4.9,0
+ORD-B032,2025-01-16,SKU-B05,Retinol Night Cream,Skincare,1,155.00,Johor Bahru,4.6,0
+ORD-B033,2025-01-17,SKU-B01,Vitamin C Serum 30ml,Skincare,2,88.00,Selangor,4.8,0
+ORD-B034,2025-01-17,SKU-B04,Collagen Face Mask 5pk,Skincare,2,45.00,Penang,4.5,0
+ORD-B035,2025-01-18,SKU-B06,Micellar Cleansing Water,Haircare,3,38.00,Kuala Lumpur,4.4,0
+ORD-B036,2025-01-18,SKU-B07,Argan Oil Hair Serum,Haircare,1,75.00,Selangor,4.6,0
+ORD-B037,2025-01-19,SKU-B03,SPF50 Sunscreen Gel,Skincare,2,65.00,Johor Bahru,4.9,0
+ORD-B038,2025-01-19,SKU-B02,Hyaluronic Moisturiser,Skincare,2,120.00,Kuala Lumpur,4.7,0
+ORD-B039,2025-01-20,SKU-B08,Lip Plumping Gloss,Makeup,3,28.00,Penang,4.3,0
+ORD-B040,2025-01-20,SKU-B01,Vitamin C Serum 30ml,Skincare,1,88.00,Selangor,4.8,0
+ORD-B041,2025-01-21,SKU-B05,Retinol Night Cream,Skincare,1,155.00,Kuala Lumpur,4.7,0
+ORD-B042,2025-01-21,SKU-B04,Collagen Face Mask 5pk,Skincare,3,45.00,Johor Bahru,4.5,0
+ORD-B043,2025-01-22,SKU-B03,SPF50 Sunscreen Gel,Skincare,4,65.00,Selangor,4.9,0
+ORD-B044,2025-01-22,SKU-B06,Micellar Cleansing Water,Haircare,1,38.00,Penang,4.4,0
+ORD-B045,2025-01-23,SKU-B01,Vitamin C Serum 30ml,Skincare,2,88.00,Kuala Lumpur,4.8,0
+ORD-B046,2025-01-23,SKU-B07,Argan Oil Hair Serum,Haircare,2,75.00,Selangor,4.6,0
+ORD-B047,2025-01-24,SKU-B02,Hyaluronic Moisturiser,Skincare,1,120.00,Johor Bahru,4.7,0
+ORD-B048,2025-01-24,SKU-B08,Lip Plumping Gloss,Makeup,2,28.00,Kuala Lumpur,4.2,0
+ORD-B049,2025-01-25,SKU-B03,SPF50 Sunscreen Gel,Skincare,3,65.00,Penang,4.9,0
+ORD-B050,2025-01-25,SKU-B05,Retinol Night Cream,Skincare,1,155.00,Selangor,4.6,0
+ORD-B051,2025-01-26,SKU-B01,Vitamin C Serum 30ml,Skincare,2,88.00,Kuala Lumpur,4.8,0
+ORD-B052,2025-01-26,SKU-B04,Collagen Face Mask 5pk,Skincare,2,45.00,Johor Bahru,4.5,0
+ORD-B053,2025-01-27,SKU-B06,Micellar Cleansing Water,Haircare,2,38.00,Selangor,4.4,0
+ORD-B054,2025-01-27,SKU-B02,Hyaluronic Moisturiser,Skincare,1,120.00,Penang,4.7,0
+ORD-B055,2025-01-28,SKU-B07,Argan Oil Hair Serum,Haircare,1,75.00,Kuala Lumpur,4.6,0
+ORD-B056,2025-01-28,SKU-B03,SPF50 Sunscreen Gel,Skincare,3,65.00,Selangor,4.9,0
+ORD-B057,2025-01-29,SKU-B08,Lip Plumping Gloss,Makeup,3,28.00,Johor Bahru,4.3,0
+ORD-B058,2025-01-29,SKU-B01,Vitamin C Serum 30ml,Skincare,1,88.00,Kuala Lumpur,4.8,0
+ORD-B059,2025-01-30,SKU-B05,Retinol Night Cream,Skincare,1,155.00,Penang,4.7,0
+ORD-B060,2025-01-31,SKU-B04,Collagen Face Mask 5pk,Skincare,4,45.00,Selangor,4.5,0
+ORD-B061,2025-02-01,SKU-B03,SPF50 Sunscreen Gel,Skincare,2,65.00,Kuala Lumpur,4.9,0
+ORD-B062,2025-02-01,SKU-B01,Vitamin C Serum 30ml,Skincare,2,88.00,Johor Bahru,4.8,0
+ORD-B063,2025-02-02,SKU-B06,Micellar Cleansing Water,Haircare,1,38.00,Selangor,4.4,0
+ORD-B064,2025-02-02,SKU-B02,Hyaluronic Moisturiser,Skincare,2,120.00,Penang,4.7,0
+ORD-B065,2025-02-03,SKU-B07,Argan Oil Hair Serum,Haircare,2,75.00,Kuala Lumpur,4.6,0
+ORD-B066,2025-02-03,SKU-B08,Lip Plumping Gloss,Makeup,2,28.00,Selangor,4.2,0
+ORD-B067,2025-02-04,SKU-B03,SPF50 Sunscreen Gel,Skincare,3,65.00,Johor Bahru,4.9,0
+ORD-B068,2025-02-04,SKU-B05,Retinol Night Cream,Skincare,1,155.00,Kuala Lumpur,4.6,1
+ORD-B069,2025-02-05,SKU-B01,Vitamin C Serum 30ml,Skincare,2,88.00,Penang,4.8,0
+ORD-B070,2025-02-05,SKU-B04,Collagen Face Mask 5pk,Skincare,3,45.00,Selangor,4.5,0
+ORD-B071,2025-02-06,SKU-B02,Hyaluronic Moisturiser,Skincare,1,120.00,Kuala Lumpur,4.7,0
+ORD-B072,2025-02-06,SKU-B06,Micellar Cleansing Water,Haircare,2,38.00,Johor Bahru,4.4,0
+ORD-B073,2025-02-07,SKU-B03,SPF50 Sunscreen Gel,Skincare,4,65.00,Selangor,4.9,0
+ORD-B074,2025-02-07,SKU-B07,Argan Oil Hair Serum,Haircare,1,75.00,Penang,4.6,0
+ORD-B075,2025-02-08,SKU-B01,Vitamin C Serum 30ml,Skincare,2,88.00,Kuala Lumpur,4.8,0
+ORD-B076,2025-02-08,SKU-B08,Lip Plumping Gloss,Makeup,3,28.00,Selangor,4.3,0
+ORD-B077,2025-02-09,SKU-B05,Retinol Night Cream,Skincare,1,155.00,Johor Bahru,4.7,0
+ORD-B078,2025-02-09,SKU-B02,Hyaluronic Moisturiser,Skincare,1,120.00,Kuala Lumpur,4.7,0
+ORD-B079,2025-02-10,SKU-B04,Collagen Face Mask 5pk,Skincare,2,45.00,Penang,4.5,0
+ORD-B080,2025-02-10,SKU-B03,SPF50 Sunscreen Gel,Skincare,3,65.00,Selangor,4.9,0
+ORD-B081,2025-02-11,SKU-B01,Vitamin C Serum 30ml,Skincare,1,88.00,Kuala Lumpur,4.8,0
+ORD-B082,2025-02-11,SKU-B06,Micellar Cleansing Water,Haircare,2,38.00,Johor Bahru,4.4,0
+ORD-B083,2025-02-12,SKU-B07,Argan Oil Hair Serum,Haircare,1,75.00,Selangor,4.6,0
+ORD-B084,2025-02-12,SKU-B08,Lip Plumping Gloss,Makeup,4,28.00,Penang,4.2,0
+ORD-B085,2025-02-13,SKU-B03,SPF50 Sunscreen Gel,Skincare,2,65.00,Kuala Lumpur,4.9,0
+ORD-B086,2025-02-13,SKU-B02,Hyaluronic Moisturiser,Skincare,2,120.00,Selangor,4.7,0
+ORD-B087,2025-02-14,SKU-B05,Retinol Night Cream,Skincare,1,155.00,Johor Bahru,4.6,0
+ORD-B088,2025-02-14,SKU-B01,Vitamin C Serum 30ml,Skincare,3,88.00,Kuala Lumpur,4.8,0
+ORD-B089,2025-02-15,SKU-B04,Collagen Face Mask 5pk,Skincare,3,45.00,Penang,4.5,0
+ORD-B090,2025-02-15,SKU-B07,Argan Oil Hair Serum,Haircare,2,75.00,Selangor,4.6,0
+ORD-B091,2025-02-16,SKU-B03,SPF50 Sunscreen Gel,Skincare,4,65.00,Kuala Lumpur,4.9,0
+ORD-B092,2025-02-16,SKU-B08,Lip Plumping Gloss,Makeup,2,28.00,Johor Bahru,4.3,0
+ORD-B093,2025-02-17,SKU-B01,Vitamin C Serum 30ml,Skincare,2,88.00,Selangor,4.8,0
+ORD-B094,2025-02-17,SKU-B06,Micellar Cleansing Water,Haircare,1,38.00,Penang,4.4,0
+ORD-B095,2025-02-18,SKU-B02,Hyaluronic Moisturiser,Skincare,1,120.00,Kuala Lumpur,4.7,0
+ORD-B096,2025-02-18,SKU-B05,Retinol Night Cream,Skincare,1,155.00,Selangor,4.7,0
+ORD-B097,2025-02-19,SKU-B04,Collagen Face Mask 5pk,Skincare,2,45.00,Johor Bahru,4.5,0
+ORD-B098,2025-02-19,SKU-B03,SPF50 Sunscreen Gel,Skincare,3,65.00,Kuala Lumpur,4.9,0
+ORD-B099,2025-02-20,SKU-B07,Argan Oil Hair Serum,Haircare,2,75.00,Penang,4.6,0
+ORD-B100,2025-02-20,SKU-B01,Vitamin C Serum 30ml,Skincare,2,88.00,Selangor,4.8,0
